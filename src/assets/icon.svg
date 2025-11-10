@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="38" height="38" role="img" aria-label="QuizShare icon">
+    <title>QuizShare icon — rounded square with diamond</title>
+    <rect x="6" y="6" width="108" height="108" rx="18" ry="18" fill="#2438C8"/>
+    <g transform="translate(60,60)">
+        <rect x="-18" y="-18" width="36" height="36" rx="6" ry="6" fill="none" stroke="#000000" stroke-width="4" transform="rotate(45)"/>
+    </g>
+</svg>
