@@ -4,7 +4,7 @@ import {useLoginStore} from "../model/store.ts";
 import {useNavigate} from "react-router-dom";
 import {loginSchema} from "../lib/Validators.ts";
 import {z} from "zod";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const LoginForm = () => {
     const [login, setLogin] = useState({email: "", password: "", rememberMe: false});
@@ -20,6 +20,16 @@ const LoginForm = () => {
             const token = await LoginApi(login.email, login.password);
             setToken({tokenValue: {accessToken: token}, rememberMe: login.rememberMe});
             setError({email: "", password: ""});
+            toast.success("Login successful!", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            })
             navigate("/");
         }catch(err){
             if(err instanceof z.ZodError){
@@ -46,7 +56,6 @@ const LoginForm = () => {
 
     return(
         <div className={"rounded-xl bg-[rgb(21,22,40)] p-6"} onSubmit={handleSubmit}>
-            <ToastContainer />
             <h1 className={"px-10 text-center text-[30px]"}> Welcome Back </h1>
             <p className={"px-[62px] text-center text-gray-300 text-[18px] mb-[48px]"}> Log in to continue your learning journey. </p>
             <form className={"px-[64px]"}>

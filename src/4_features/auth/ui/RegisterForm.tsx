@@ -4,7 +4,7 @@ import {RegisterApi} from "../model/api.ts";
 import {useNavigate} from "react-router-dom";
 import {registerSchema} from "../lib/Validators.ts";
 import {z} from "zod";
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
 
 export const RegisterForm  = () => {
     const [selected, setSelected] = useState(0);
@@ -69,7 +69,6 @@ export const RegisterForm  = () => {
 
     return (
         <div className={"rounded-xl bg-[rgb(21,22,40)] p-6"}>
-            <ToastContainer />
             <h1 className={"px-10 text-center text-[30px]"}> Create Your QuizShare Account </h1>
             <p className={"px-[62px] text-center text-gray-300 text-[18px] mb-[48px]"}> Join students creating and sharing interactive quizzes. </p>
             <form className={"px-[64px]"} onSubmit={handleSubmit}>
