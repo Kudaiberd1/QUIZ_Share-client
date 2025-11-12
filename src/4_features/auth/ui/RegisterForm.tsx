@@ -4,7 +4,7 @@ import {RegisterApi} from "../model/api.ts";
 import {useNavigate} from "react-router-dom";
 import {registerSchema} from "../lib/Validators.ts";
 import {z} from "zod";
-import {toast} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 
 export const RegisterForm  = () => {
     const [selected, setSelected] = useState(0);
@@ -29,7 +29,7 @@ export const RegisterForm  = () => {
             setError({email: "", password: ""});
             navigate("/login");
         }catch(err) {
-            console.log(err);
+            //console.log(err.response.data.message);
             if(err instanceof z.ZodError){
                 const er = err.issues;
                 for(let i = 0; i<er.length; i++) {
@@ -37,23 +37,39 @@ export const RegisterForm  = () => {
                     if (er[i].path[0] == "password" || er[i].path[0] == "confirmPassword") setError(prev => ({ ...prev, password: er[i].message }));
                 }
             }else{
-                setError({email: "", password: ""});
-                toast.error((err.message || "Somthing wrong!"), {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
+                const error_message = err.response.data.message;
+                if(error_message.includes("unique")){
+                    setError({email: "", password: ""});
+                    toast.error("This email already exists", {
+                        position: "top-right",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                    });
+                }else{
+                    setError({email: "", password: ""});
+                    toast.error(err.response.data.message, {
+                        position: "top-right",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                    });
+                }
             }
         }
     }
 
     return (
         <div className={"rounded-xl bg-[rgb(21,22,40)] p-6"}>
+            <ToastContainer />
             <h1 className={"px-10 text-center text-[30px]"}> Create Your QuizShare Account </h1>
             <p className={"px-[62px] text-center text-gray-300 text-[18px] mb-[48px]"}> Join students creating and sharing interactive quizzes. </p>
             <form className={"px-[64px]"} onSubmit={handleSubmit}>
