@@ -11,13 +11,14 @@ export const LoginApi = async (email: string, password: string) => {
     return response.data;
 }
 
-export const RegisterApi = async ({firstName, lastName, email, password, confirmPassword, role} : RegisterFormType) => {
+export const RegisterApi = async ({firstName, lastName, email, password, confirmPassword, file, role} : RegisterFormType) => {
     const response = await axios.post(`${API_URL}/register`, {
         firstName,
         lastName,
         email,
         password,
         confirmPassword,
+        file,
         role
     });
     return response.data;

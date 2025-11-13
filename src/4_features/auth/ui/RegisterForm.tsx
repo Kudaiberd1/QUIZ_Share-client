@@ -1,10 +1,10 @@
 import {useState} from "react";
 import type { RegisterFormType } from "../../../5_entity/model/user/type.ts";
-import {RegisterApi} from "../model/api.ts";
 import {useNavigate} from "react-router-dom";
 import {registerSchema} from "../lib/Validators.ts";
 import {z} from "zod";
 import {toast} from "react-toastify";
+import axios from "axios";
 
 export const RegisterForm  = () => {
     const [selected, setSelected] = useState(0);
@@ -18,14 +18,31 @@ export const RegisterForm  = () => {
         email: "",
         password: "",
         confirmPassword: "",
+        file: null,
         role: "STUDENT"
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        console.log(register);
         try{
             await registerSchema.parseAsync({email: register.email, password: register.password, confirmPassword: register.confirmPassword});
-            await RegisterApi(register);
+            const formData = new FormData();
+            formData.append("file", register.file);
+            formData.append(
+                "data",
+                new Blob([JSON.stringify({
+                    firstName: register.firstName,
+                    lastName: register.lastName,
+                    email: register.email,
+                    password: register.password,
+                    confirmPassword: register.confirmPassword,
+                    role: register.role
+                })], { type: "application/json" })
+            );
+
+            await axios.post("http://localhost:8080/api/v1/auth/register", formData);
+
             setError({email: "", password: ""});
             navigate("/login");
         }catch(err) {
@@ -80,6 +97,15 @@ export const RegisterForm  = () => {
                 <input type={"password"} onChange={(e) => setRegister({...register, password: e.target.value})} placeholder={"Password"} className={"border border-gray-500 rounded-lg p-3 mb-3 w-full"} />
                 <input type={"password"} onChange={(e) => setRegister({...register, confirmPassword: e.target.value})} placeholder={"Confirm Password"} className={`border border-gray-500 rounded-lg p-3 ${!error.password && "mb-[27px]"} w-full`} />
                 {error.password && <p className="text-red-400 mt-2 mb-[27px] text-sm">{error.password}</p>}
+
+                <input type={"file"} className="block w-full text-sm text-gray-300
+               file:mr-4 file:py-2 file:px-4
+               file:rounded-lg file:border-0
+               file:text-sm file:font-semibold
+               file:bg-[rgb(41,69,215)] file:text-white
+               hover:file:bg-blue-700
+               mb-3
+               cursor-pointer" onChange={(e) => setRegister({...register, file: e.target.files?.[0]}) } />
 
                 <p className={"pb-2"}> I am a: </p>
                 <div className={"flex mb-6"}>
