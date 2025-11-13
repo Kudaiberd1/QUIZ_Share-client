@@ -16,6 +16,7 @@ const HomePage = () => {
                     <QuizFilter />
 
                     <QuizList />
+
                 </main>
             </div>
         </div>
