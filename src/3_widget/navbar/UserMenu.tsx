@@ -1,7 +1,23 @@
+import {useEffect, useState} from "react";
+import api from "../../6_shared/api/axiosInstance.ts";
+import {useUserStore} from "../../4_features/auth/model/store.ts";
+import type {User} from "../../5_entity/model/user/type.ts";
+import axios from "axios";
+
 
 const UserMenu = () => {
+    const { setUser } = useUserStore();
+    const [profile, setProfile] = useState<User>();
+
+    useEffect(() => {
+        api.get("/auth/me").then(
+            (res) => {setUser(res.data); setProfile(res.data)}
+        )
+    },[]);
+
     return (
         <>
+            <img className={"rounded-full h-[36px] w-[36px]"} src={profile?.imageUrl ? profile?.imageUrl : `https://avatar.iran.liara.run/username?username=${profile?.firstName}+${profile?.lastName}`} />
         </>
     )
 }
