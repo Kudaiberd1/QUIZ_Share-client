@@ -2,14 +2,16 @@ import {useEffect, useState} from "react";
 import api from "../../../6_shared/api/axiosInstance.ts";
 import type {QuizResponse} from "../../model/quiz/type.ts";
 import QuizCard from "./QuizCard.tsx";
+import {useQuizStore} from "../model/store.ts";
 
 const QuizList = () => {
 
-    const [quizzes, setQuizzes] = useState<QuizResponse[]>();
+    const { setQuiz } = useQuizStore();
+    const quizzes = useQuizStore((state) => state.quiz);
 
     useEffect(() => {
         api.get("/quiz")
-            .then((res) => {setQuizzes(res.data)})
+            .then((res) => {setQuiz(res.data)})
             .catch((err) => console.log(err, "from fetching quizzes"));
     },[]);
 
