@@ -10,7 +10,7 @@ import user from "../../6_shared/ui/icons/user.svg"
 
 
 const Sidebar = () => {
-    const [selected, setSelected] = useState(1);
+    const [selected, setSelected] = useState(0);
     return (
         <aside className={"w-76 p-6 flex flex-col transition-all duration-180"}>
             <div className={"flex text-center"}>
