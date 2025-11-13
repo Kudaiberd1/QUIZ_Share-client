@@ -8,7 +8,7 @@ const HomePage = () => {
     return (
         <div className={`flex min-h-screen`}>
             <Sidebar />
-            <div className={"flex-1 flex flex-col ms-[304px]"}>
+            <div className={"flex-1 flex flex-col md:ms-[304px]"}>
                 <Navbar />
                 <main className={"py-[27px] px-[48px] my-3 h-full"}>
                     <h1 className={"text-[36px] font-bold mb-[29px]"}> Discover Quizzes </h1>

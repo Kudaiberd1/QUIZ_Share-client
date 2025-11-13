@@ -2,17 +2,18 @@ import {useEffect, useState} from "react";
 import api from "../../6_shared/api/axiosInstance.ts";
 import {useUserStore} from "../../4_features/auth/model/store.ts";
 import type {User} from "../../5_entity/model/user/type.ts";
-import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 
 const UserMenu = () => {
     const { setUser } = useUserStore();
     const [profile, setProfile] = useState<User>();
+    const navigate = useNavigate();
 
     useEffect(() => {
         api.get("/auth/me").then(
             (res) => {setUser(res.data); setProfile(res.data)}
-        ).catch((err) => console.log(err, "from fetching my profile"));
+        ).catch(() => navigate("/login"));
     },[]);
 
     return (
