@@ -12,7 +12,7 @@ const UserMenu = () => {
     useEffect(() => {
         api.get("/auth/me").then(
             (res) => {setUser(res.data); setProfile(res.data)}
-        )
+        ).catch((err) => console.log(err, "from fetching my profile"));
     },[]);
 
     return (

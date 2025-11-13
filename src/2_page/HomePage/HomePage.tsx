@@ -1,6 +1,7 @@
 import Sidebar from "../../3_widget/sidebar/Sidebar.tsx";
 import Navbar from "../../3_widget/navbar/Navbar.tsx";
 import QuizFilter from "../../4_features/quiz-filter/ui/QuizFilter.tsx";
+import QuizList from "../../5_entity/quiz/ui/QuizList.tsx";
 
 const HomePage = () => {
 
@@ -14,7 +15,7 @@ const HomePage = () => {
 
                     <QuizFilter />
 
-
+                    <QuizList />
                 </main>
             </div>
         </div>
