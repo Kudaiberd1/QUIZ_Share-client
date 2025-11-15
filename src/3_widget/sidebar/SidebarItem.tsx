@@ -7,7 +7,7 @@ interface Props {
     label: string;
     to: string;
     isActive: boolean;
-    onClick: (event: MouseEvent<HTMLButtonElement>) => void;
+    onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
 const SidebarItem = ({icon, label, to, isActive, onClick}: Props) => {
