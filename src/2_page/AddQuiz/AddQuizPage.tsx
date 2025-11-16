@@ -18,7 +18,7 @@ const AddQuizPage = () => {
 
                     <div className={"flex space-x-5 mb-[24px]"}>
                         {/* Quiz details */}
-                        <div className={"rounded-xl p-[24px] bg-[rgb(30,30,56)] flex flex-col"}>
+                        <div className={"rounded-xl p-[24px] bg-[rgb(30,30,56)] max-h-[456px]"}>
                             <h1 className={"text-[22px] mb-[16px]"}> Quiz Details </h1>
 
                             <form className={"w-[300px]"}>
