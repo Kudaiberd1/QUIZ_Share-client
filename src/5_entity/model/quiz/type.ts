@@ -23,3 +23,9 @@ interface Variant {
     id: number;
     option: string;
 }
+
+export interface QuestionProp {
+    question: string;
+    variants: string[];
+    answer: number[];
+}

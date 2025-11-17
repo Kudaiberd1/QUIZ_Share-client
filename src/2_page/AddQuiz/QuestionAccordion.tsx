@@ -15,6 +15,7 @@ export default function QuestionAccordion({ title, children }) {
                         className="overflow-hidden transition-all duration-300 ease-in-out"
                         style={{
                             maxHeight: open ? "500px" : "0px",
+                            overflowY: open ? "auto" : "hidden",
                             opacity: open ? 1 : 0,
                         }}
                     >
