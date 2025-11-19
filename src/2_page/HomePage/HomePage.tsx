@@ -8,9 +8,9 @@ const HomePage = () => {
     return (
         <div className={`flex min-h-screen`}>
             <Sidebar selected={0} />
-            <div className={"flex-1 flex flex-col ms-[304px]"}>
+            <div className={"flex-1 flex flex-col md:ms-[304px]"}>
                 <Navbar />
-                <main className={"py-[27px] px-[48px] my-3 h-full"}>
+                <main className={"py-[27px] px-[48px] my-3 h-full mt-12"}>
                     <h1 className={"text-[36px] font-bold mb-[29px]"}> Discover Quizzes </h1>
 
                     <QuizFilter />

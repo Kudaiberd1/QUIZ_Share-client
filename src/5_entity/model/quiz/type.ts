@@ -6,6 +6,7 @@ export interface QuizResponse {
     description: string;
     privacy: string;
     questions: Question[];
+    imageUrl: string;
     userId: number;
     firstName: string;
     lastName: string;
@@ -28,4 +29,14 @@ export interface QuestionProp {
     question: string;
     variants: string[];
     answer: number[];
+}
+
+export interface QuizProp {
+    title: string;
+    description: string;
+    difficulty: string;
+    subject: string;
+    privacy: string;
+    question: QuestionProp[];
+    authorId: number;
 }

@@ -28,7 +28,7 @@ const Sidebar = ({selected} : Prop) => {
             </button>
 
             <aside className={`fixed h-full w-76 p-6 flex flex-col transition-all duration-180 ${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:w-76 w-64 bg-[rgb(10,9,41)]`}>
-                <div className={"flex text-center"}>
+                <div className={"flex text-center ms-12 md:ms-0"}>
                     <img src={icon} />
                     <h1 className={"my-auto text-2xl text-[rgb(41,69,215)] pl-1"}> QuizShare </h1>
                 </div>

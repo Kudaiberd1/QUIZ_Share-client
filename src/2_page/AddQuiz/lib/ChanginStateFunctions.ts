@@ -65,3 +65,23 @@ export const updateVariant = (
         )
     );
 };
+
+export const toggleAnswer = (
+    qIndex: number,
+    optionIndex: number,
+    setQuestions: React.Dispatch<React.SetStateAction<QuestionProp[]>>
+) => {
+    setQuestions(prev =>
+        prev.map((q, i) =>
+            i === qIndex
+                ? {
+                    ...q,
+                    answer: q.answer.includes(optionIndex)
+                        ? q.answer.filter(a => a !== optionIndex)
+                        : [...q.answer, optionIndex]
+                }
+                : q
+        )
+    );
+
+};
