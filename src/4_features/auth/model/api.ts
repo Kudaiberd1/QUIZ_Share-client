@@ -1,7 +1,8 @@
 import axios from "axios";
 import type {RegisterFormType} from "../../../5_entity/model/user/type.ts";
+import {baseUrl} from "../../../api.ts";
 
-const API_URL = "http://localhost:8080/api/v1/auth"
+const API_URL = baseUrl+"/auth";
 
 export const LoginApi = async (email: string, password: string) => {
     const response = await axios.post(`${API_URL}/login`, {

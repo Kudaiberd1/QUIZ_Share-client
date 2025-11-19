@@ -5,6 +5,7 @@ import {registerSchema} from "../lib/Validators.ts";
 import {z} from "zod";
 import {toast} from "react-toastify";
 import axios from "axios";
+import {baseUrl} from "../../../api.ts";
 
 export const RegisterForm  = () => {
     const [selected, setSelected] = useState(0);
@@ -41,7 +42,7 @@ export const RegisterForm  = () => {
                 })], { type: "application/json" })
             );
 
-            await axios.post("http://localhost:8080/api/v1/auth/register", formData);
+            await axios.post(`${baseUrl}/auth/register`, formData);
 
             setError({email: "", password: ""});
             navigate("/login");
