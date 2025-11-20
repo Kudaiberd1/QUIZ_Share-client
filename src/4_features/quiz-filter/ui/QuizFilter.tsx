@@ -63,7 +63,7 @@ const QuizFilter = () => {
                         id="sort"
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
-                        className="bg-transparent text-white font-medium focus:outline-none cursor-pointer md:w-full w-auto"
+                        className="bg-transparent text-white font-medium focus:outline-none cursor-pointer w-auto"
                     >
                         <option value="LATEST">Latest</option>
                         <option value="OLD">Oldest</option>

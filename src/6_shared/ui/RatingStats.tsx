@@ -5,7 +5,8 @@ interface RatingStatsProps {
 
 const RatingStats = ({ratings, totalRatings} : RatingStatsProps) => {
 
-    const averageRating = totalRatings/ratings?.length;
+    const averageRating = ratings.reduce((acc, num, i) => (acc*i) + num, 0)
+        / ratings.reduce((acc, num) => acc + num, 0);
 
     return (
         <div className="bg-[#0f1236] text-white w-full max-w-xl p-8 rounded-xl">
@@ -22,9 +23,9 @@ const RatingStats = ({ratings, totalRatings} : RatingStatsProps) => {
                     const percent = (rate / totalRatings) * 100;
 
                     return (
-                        <div key={5-index} className="flex items-center gap-3">
+                        <div key={index+1} className="flex items-center gap-3">
                             <div className="w-6 flex items-center gap-1 opacity-90">
-                                {5-index} <span>★</span>
+                                {index+1} <span>★</span>
                             </div>
 
                             <div className="w-full h-2 bg-[#1c2252] rounded overflow-hidden">
@@ -35,7 +36,7 @@ const RatingStats = ({ratings, totalRatings} : RatingStatsProps) => {
                             </div>
 
                             <div className="w-8 text-right opacity-80">
-                                {5-index}
+                                {index+1}
                             </div>
                         </div>
                     );

@@ -11,6 +11,7 @@ export interface QuizResponse {
     firstName: string;
     lastName: string;
     rate: number[];
+    takeTimeLimit: number;
 }
 
 interface Question {

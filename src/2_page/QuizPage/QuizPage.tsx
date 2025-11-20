@@ -14,9 +14,16 @@ const QuizPage = () => {
 
     const [quiz, setQuiz] = useState<QuizResponse>();
 
+    const [average, setAverage] = useState<number>(0);
+
     useEffect(() => {
-        api.get(`/quiz/${id}`).then((res) => {setQuiz(res.data); console.log(res.data)});
-    },[id]);
+        api.get(`/quiz/${id}`).then((res) => {
+            setQuiz(res.data);
+            const avg = res.data.rate.reduce((acc, num, i) => (acc*i) + num, 0)
+                / res.data.rate.reduce((acc, num) => acc + num, 0);
+            setAverage(avg);
+        });
+    }, [id]);
 
 
     return (
@@ -34,17 +41,17 @@ const QuizPage = () => {
                             {/* Quiz detail */}
                             <div className={"max-w-[683px]"}>
                                 <p className={"text-gray-400 text-[16px] mb-2"}> {quiz?.description} </p>
-                                <p> Subject: Scince Questions: 20 Time: 30 minutes  </p>
+                                <p> Subject: Scince Questions: {quiz?.questions.length} {quiz?.takeTimeLimit && `Time: ${quiz?.takeTimeLimit} seconds`}  </p>
                                 <div className={"flex gap-[6px] my-2"} style={{ alignItems: "center"}}>
                                     <div className={"flex gap-[4px]"}>
-                                        <FaStar color="#3A5BFF" size={20} />
-                                        <FaStar color="#3A5BFF" size={20} />
-                                        <FaStar color="#3A5BFF" size={20} />
-                                        <FaStar color="#3A5BFF" size={20} />
-                                        <FaStarHalfAlt color="#3A5BFF" size={20} />
+                                        <FaStar color={average>0 ? "#3A5BFF" : ""} size={20} />
+                                        <FaStar color={average>1 ? "#3A5BFF" : ""} size={20} />
+                                        <FaStar color={average>2 ? "#3A5BFF" : ""} size={20} />
+                                        <FaStar color={average>3 ? "#3A5BFF" : ""} size={20} />
+                                        <FaStar color={average>4 ? "#3A5BFF" : ""} size={20} />
                                     </div>
                                     <span className={"text-[#D0D0D0] text-[16px]"}>
-                                        {quiz?.rate.reduce((acc, num) => acc + num, 0) / quiz?.rate.length} ({quiz?.rate.reduce((acc, num) => acc + num, 0)} ratings)
+                                        {average} ({quiz?.rate.reduce((acc, num) => acc + num, 0)} ratings)
                                       </span>
                                 </div>
                                 <button className={"mt-3 px-[32px] py-1 bg-[rgb(42,69,215)] text-[18px] rounded-lg"}> Start Quiz </button>
