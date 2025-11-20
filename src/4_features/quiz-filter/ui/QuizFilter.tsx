@@ -1,7 +1,7 @@
 import {Search} from "lucide-react";
 import {useEffect, useState} from "react";
 import api from "../../../6_shared/api/axiosInstance.ts";
-import {useQuizStore} from "../../../5_entity/quiz/model/store.ts";
+import {useQuizStore} from "../../quiz/model/store.ts";
 
 const QuizFilter = () => {
 
@@ -9,7 +9,7 @@ const QuizFilter = () => {
     const [sortBy, setSortBy] = useState("LATEST");
     const [filterBySubject, setFilterBySubject] = useState<string | undefined>("");
     const [subjects, setSubjects] = useState<string[]>();
-    const { updateQuiz } = useQuizStore();
+    const { updateQuizzes } = useQuizStore();
 
     useEffect(() => {
         api.get("/quiz/subjects")
@@ -18,7 +18,7 @@ const QuizFilter = () => {
     },[])
 
     useEffect(() => {
-        api.get(`/quiz/filter?${filterBySubject && `subject=${filterBySubject}`}&${sortBy && `filter=${sortBy}`}&${findByTitle && `text=${findByTitle}`}`).then((res) => updateQuiz(res.data)).catch((err) => console.log(err, "from filtering"));
+        api.get(`/quiz/filter?${filterBySubject && `subject=${filterBySubject}`}&${sortBy && `filter=${sortBy}`}&${findByTitle && `text=${findByTitle}`}`).then((res) => updateQuizzes(res.data)).catch((err) => console.log(err, "from filtering"));
     },[filterBySubject, sortBy, findByTitle])
 
 

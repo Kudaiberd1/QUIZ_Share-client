@@ -14,6 +14,7 @@ import trash_icon from "../../6_shared/ui/icons/trash.svg"
 import {useUserStore} from "../../4_features/auth/model/store.ts";
 import api from "../../6_shared/api/axiosInstance.ts";
 import {useNavigate} from "react-router-dom";
+import {useQuizStore} from "../../4_features/quiz/model/store.ts";
 
 
 const AddQuizPage = () => {
@@ -29,6 +30,8 @@ const AddQuizPage = () => {
     const navigate = useNavigate();
 
     const user = useUserStore(state => state.user);
+
+    const { setQuizzes } = useQuizStore();
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
@@ -83,7 +86,6 @@ const AddQuizPage = () => {
     useEffect(() => {
         const valid = validateForm();
         setIsValid(valid);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quiz, questions]);
 
     const handleSubmit = async (e) => {
@@ -114,7 +116,7 @@ const AddQuizPage = () => {
             const res = await api.post("/quiz", formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
-            console.log(res.data, "From quiz creat");
+            setQuizzes(res.data);
             navigate("/");
         } catch (err) {
             console.log(err, "from quiz create");

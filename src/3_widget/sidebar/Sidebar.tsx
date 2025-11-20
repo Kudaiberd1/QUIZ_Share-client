@@ -8,6 +8,7 @@ import grid from "../../6_shared/ui/icons/grid.svg"
 import chat from "../../6_shared/ui/icons/chat.svg"
 import user from "../../6_shared/ui/icons/user.svg"
 import { Menu, X } from "lucide-react";
+import {useNavigate} from "react-router-dom";
 
 
 interface Prop{
@@ -17,6 +18,7 @@ interface Prop{
 const Sidebar = ({selected} : Prop) => {
 
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
 
     return (
         <>
@@ -28,7 +30,7 @@ const Sidebar = ({selected} : Prop) => {
             </button>
 
             <aside className={`fixed h-full w-76 p-6 flex flex-col transition-all duration-180 ${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:w-76 w-64 bg-[rgb(10,9,41)]`}>
-                <div className={"flex text-center ms-12 md:ms-0"}>
+                <div className={"flex text-center ms-12 md:ms-0 cursor-pointer"} onClick={() => navigate("/")}>
                     <img src={icon} />
                     <h1 className={"my-auto text-2xl text-[rgb(41,69,215)] pl-1"}> QuizShare </h1>
                 </div>

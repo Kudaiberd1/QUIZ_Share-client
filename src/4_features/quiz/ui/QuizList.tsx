@@ -1,6 +1,5 @@
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import api from "../../../6_shared/api/axiosInstance.ts";
-import type {QuizResponse} from "../../model/quiz/type.ts";
 import QuizCard from "./QuizCard.tsx";
 import {useQuizStore} from "../model/store.ts";
 
@@ -11,7 +10,7 @@ const QuizList = () => {
 
     useEffect(() => {
         api.get("/quiz")
-            .then((res) => {setQuiz(res.data)})
+            .then((res) => setQuiz(res.data))
             .catch((err) => console.log(err, "from fetching quizzes"));
     },[]);
 
