@@ -76,7 +76,12 @@ const AddQuizPage = () => {
                         }
                     });
                 }
+
+                if (!q.answer || q.answer.length === 0) {
+                    newErrors[`question_${index}_answer`] = "At least one answer must be selected";
+                }
             });
+
         }
 
         setErrors(newErrors);
@@ -257,37 +262,43 @@ const AddQuizPage = () => {
                                 {errors.questions && <p className="text-red-500 text-sm mb-2 md:mb-[8px]">{errors.questions}</p>}
 
                                 {questions.map((question, index) =>
-                                    <QuestionAccordion title={`Question ${index+1}: ${question.question}`} key={index} >
-                                        <div className="mt-4 md:mt-[18px]">
-                                            <p className="text-[16px] pb-4 md:pb-[16px]"> Question </p>
-                                            <textarea className="bg-[rgb(10,14,27)] w-full mb-1 rounded-lg p-2" placeholder="Question description..." onChange={(e) => updateQuestionField(index, "question", e.target.value, setQuestions)} />
-                                            {errors[`question_${index}`] && <p className="text-red-500 text-sm mb-3 md:mb-[12px]">{errors[`question_${index}`]}</p>}
-                                            <p className="mb-4 md:mb-[18px]"> Options </p>
-                                            {errors[`question_${index}_variants`] && <p className="text-red-500 text-sm mb-2 md:mb-[8px]">{errors[`question_${index}_variants`]}</p>}
-                                            <div className="space-y-3">
-                                                {question.variants.map((option, oIndex) =>
-                                                    <>
-                                                    <div className="flex border-2 border-[rgb(36,40,63)] bg-[rgb(10,14,27)] p-1 pl-3 rounded-lg" key={oIndex} onMouseEnter={() => setShow(oIndex+1)} onMouseLeave={() => setShow(0)}>
-                                                        <input type="checkbox" className="accent-white w-4 h-4 my-auto mr-3" onChange={() => toggleAnswer(index, oIndex, setQuestions)} />
-                                                        <input className="p-2 rounded-lg bg-[rgb(10,14,27)] w-full" placeholder="Option..." onChange={(e) => updateVariant(index, oIndex, e.target.value, setQuestions)} />
-                                                        <img src={trash_icon} className={`text-red-500 p-2 ${(show!=oIndex+1 || question.variants.length==2) && "hidden" } `} onClick={() => deleteOption(index, oIndex, setQuestions)} />
-                                                    </div>
-                                                    {errors[`question_${index}_variant_${oIndex}`] ? <p key={`error_${index}_${oIndex}`} className="text-red-500 text-sm mb-2 md:mb-[8px]">{errors[`question_${index}_variant_${oIndex}`]}</p> : null}
-                                                    </>
-                                                )}
+                                    <>
+                                        <QuestionAccordion title={`Question ${index+1}: ${question.question}`} key={index} >
+                                            <div className="mt-4 md:mt-[18px]">
+                                                <p className="text-[16px] pb-4 md:pb-[16px]"> Question </p>
+                                                <textarea className="bg-[rgb(10,14,27)] w-full mb-1 rounded-lg p-2" placeholder="Question description..." onChange={(e) => updateQuestionField(index, "question", e.target.value, setQuestions)} />
+                                                {errors[`question_${index}`] && <p className="text-red-500 text-sm mb-3 md:mb-[12px]">{errors[`question_${index}`]}</p>}
+                                                <p className="mb-4 md:mb-[18px]"> Options </p>
+                                                {errors[`question_${index}_variants`] && <p className="text-red-500 text-sm mb-2 md:mb-[8px]">{errors[`question_${index}_variants`]}</p>}
+                                                <div className="space-y-3">
+                                                    {question.variants.map((option, oIndex) =>
+                                                        <>
+                                                            <div className="flex border-2 border-[rgb(36,40,63)] bg-[rgb(10,14,27)] p-1 pl-3 rounded-lg" key={oIndex} onMouseEnter={() => setShow(oIndex+1)} onMouseLeave={() => setShow(0)}>
+                                                                <input type="checkbox" className="accent-white w-4 h-4 my-auto mr-3" onChange={() => toggleAnswer(index, oIndex, setQuestions)} />
+                                                                <input className="p-2 rounded-lg bg-[rgb(10,14,27)] w-full" placeholder="Option..." onChange={(e) => updateVariant(index, oIndex, e.target.value, setQuestions)} />
+                                                                <img src={trash_icon} className={`text-red-500 p-2 ${(show!=oIndex+1 || question.variants.length==2) && "hidden" } `} onClick={() => deleteOption(index, oIndex, setQuestions)} />
+                                                            </div>
+                                                            {errors[`question_${index}_variant_${oIndex}`] ? <p key={`error_${index}_${oIndex}`} className="text-red-500 text-sm mb-2 md:mb-[8px]">{errors[`question_${index}_variant_${oIndex}`]}</p> : null}
+                                                        </>
+                                                    )}
 
-                                                <div className="justify-end flex space-x-2">
-                                                    <p className="p-2 border bg-red-500 border-red-500 rounded-lg mt-4 cursor-pointer w-full max-w-[160px] text-center" onClick={() => deleteQuestion({qIndex : index, setQuestions : setQuestions})}> Delete Question </p>
-                                                    <p
-                                                        className={`p-2 border bg-[rgb(41,69,214)] border-[rgb(41,69,214)] rounded-lg mt-4 cursor-pointer w-full max-w-[160px] text-center ${question.variants.length==8 ? "hidden": " "}`}
-                                                        onClick={() => addOption({ qIndex: index, setQuestions })}
-                                                    > + Add Option </p>
+                                                    <div className="justify-end flex space-x-2">
+                                                        <p className="p-2 border bg-red-500 border-red-500 rounded-lg mt-4 cursor-pointer w-full max-w-[160px] text-center" onClick={() => deleteQuestion({qIndex : index, setQuestions : setQuestions})}> Delete Question </p>
+                                                        <p
+                                                            className={`p-2 border bg-[rgb(41,69,214)] border-[rgb(41,69,214)] rounded-lg mt-4 cursor-pointer w-full max-w-[160px] text-center ${question.variants.length==8 ? "hidden": " "}`}
+                                                            onClick={() => addOption({ qIndex: index, setQuestions })}
+                                                        > + Add Option </p>
+                                                    </div>
+
                                                 </div>
 
                                             </div>
+                                        </QuestionAccordion>
+                                        {errors[`question_${index}_answer`] && (
+                                            <p className="text-red-500 text-sm mb-2 md:mb-[8px]">{errors[`question_${index}_answer`]}</p>
+                                        )}
+                                    </>
 
-                                        </div>
-                                    </QuestionAccordion>
                                 )}
                             </div>
                         </div>

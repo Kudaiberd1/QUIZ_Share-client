@@ -6,6 +6,7 @@ import ProtectedRoute from "../../6_shared/lib/ProtectedRoute.tsx";
 import {ToastContainer} from "react-toastify";
 import AddQuizPage from "../../2_page/AddQuiz/AddQuizPage.tsx";
 import QuizPage from "../../2_page/QuizPage/QuizPage.tsx";
+import LogOut from "../../2_page/LogOut.tsx";
 
 const AppRoute = () => {
     return(
@@ -19,6 +20,7 @@ const AppRoute = () => {
                 </Route>
                 <Route path={"/register"} element={<Register />} />
                 <Route path={"/login"} element={<Login />} />
+                <Route path={"/logout"} element={<LogOut />} />
             </Routes>
         </>
 
