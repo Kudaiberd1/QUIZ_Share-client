@@ -178,7 +178,6 @@ const AddQuizPage = () => {
                                             />
                                         )}
 
-                                        {/* Upload UI when no image */}
                                         {!image && (
                                             <div className="flex flex-col items-center text-gray-400">
                                                 <svg
@@ -200,7 +199,6 @@ const AddQuizPage = () => {
                                             </div>
                                         )}
 
-                                        {/* Invisible input */}
                                         <input
                                             type="file"
                                             accept="image/*"

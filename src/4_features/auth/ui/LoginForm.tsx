@@ -58,7 +58,7 @@ const LoginForm = () => {
         <div className={"rounded-xl md:bg-[rgb(21,22,40)] p-6"} onSubmit={handleSubmit}>
             <h1 className={"px-10 text-center text-[30px]"}> Welcome Back </h1>
             <p className={"px-[62px] text-center text-gray-300 text-[18px] mb-[48px]"}> Log in to continue your learning journey. </p>
-            <form className={"px-[64px]"}>
+            <form className={"md:px-[64px]"}>
                 <input onChange={(e) => setLogin({...login, email: e.target.value})} placeholder={"Email Address"} className={"border border-gray-500 rounded-lg mb-3 p-3 w-full"} />
                 {error.email && <p className="text-red-400 text-sm mt-0 mb-3">{error.email}</p>}
 
