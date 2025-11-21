@@ -3,7 +3,7 @@ import Navbar from "../../3_widget/navbar/Navbar.tsx";
 import default_image from "../../assets/default-quiz-image.png"
 import {FaStar, FaStarHalfAlt} from 'react-icons/fa';
 import RatingStats from "../../6_shared/ui/RatingStats.tsx";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import api from "../../6_shared/api/axiosInstance.ts";
 import type {QuizResponse} from "../../5_entity/model/quiz/type.ts";
@@ -15,14 +15,22 @@ const QuizPage = () => {
     const [quiz, setQuiz] = useState<QuizResponse>();
 
     const [average, setAverage] = useState<number>(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         api.get(`/quiz/${id}`).then((res) => {
             setQuiz(res.data);
-            const avg = res.data.rate.reduce((acc, num, i) => (acc*i) + num, 0)
-                / res.data.rate.reduce((acc, num) => acc + num, 0);
-            setAverage(avg);
+            let avg = 0;
+            let sm=0;
+            for(let i = 0;i < res.data.rate.length; i++){
+                avg+=(res.data.rate[i]*(i+1));
+                sm+=res.data.rate[i];
+            }
+            if(sm!=0)
+                setAverage(avg/sm);
+            console.log(res.data);
         });
+
     }, [id]);
 
 
@@ -50,11 +58,11 @@ const QuizPage = () => {
                                         <FaStar color={average>3 ? "#3A5BFF" : ""} size={20} />
                                         <FaStar color={average>4 ? "#3A5BFF" : ""} size={20} />
                                     </div>
-                                    <span className={"text-[#D0D0D0] text-[16px]"}>
-                                        {average} ({quiz?.rate.reduce((acc, num) => acc + num, 0)} ratings)
+                                    <span className={"text-[#D0D0D0] text-[17px]"}>
+                                        {average || 0} ({quiz?.rate.reduce((acc, num) => acc + num, 0)} ratings)
                                       </span>
                                 </div>
-                                <button className={"mt-3 px-[32px] py-1 bg-[rgb(42,69,215)] text-[18px] rounded-lg"}> Start Quiz </button>
+                                <button className={"mt-3 px-[32px] py-1 bg-[rgb(42,69,215)] text-[18px] rounded-lg"} onClick={() => navigate(`/quiz/${id}/taking`)}> Start Quiz </button>
                             </div>
                             {/* Quiz image */}
                             <div className={"object-cover"}>
@@ -66,7 +74,7 @@ const QuizPage = () => {
                     <h1 className={"text-[24px] mt-[24px]"}> Student Feedback </h1>
 
                     <div className={"mt-[45px] max-w-[693px] w-full rounded-lg py-auto pb-[54px]"}>
-                        {quiz && <RatingStats ratings={quiz.rate} totalRatings={quiz.rate.reduce((acc, num) => acc + num, 0)} />}
+                        {quiz && <RatingStats averageRating={average} ratings={quiz.rate} totalRatings={quiz.rate.reduce((acc, num) => acc + num, 0)} />}
                     </div>
 
                 </main>

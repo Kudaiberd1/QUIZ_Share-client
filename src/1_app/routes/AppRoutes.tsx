@@ -7,6 +7,7 @@ import {ToastContainer} from "react-toastify";
 import AddQuizPage from "../../2_page/AddQuiz/AddQuizPage.tsx";
 import QuizPage from "../../2_page/QuizPage/QuizPage.tsx";
 import LogOut from "../../2_page/LogOut.tsx";
+import TakingQuizPage from "../../2_page/TakingQuiz/TakingQuizPage.tsx";
 
 const AppRoute = () => {
     return(
@@ -17,6 +18,7 @@ const AppRoute = () => {
                     <Route path={"/"} element={<HomePage />}/>
                     <Route path={"/add"} element={<AddQuizPage />}/>
                     <Route path={"/quiz/:id"} element={<QuizPage />} />
+                    <Route path={"/quiz/:id/taking"} element={<TakingQuizPage />} />
                 </Route>
                 <Route path={"/register"} element={<Register />} />
                 <Route path={"/login"} element={<Login />} />

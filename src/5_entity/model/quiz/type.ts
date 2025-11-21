@@ -18,7 +18,7 @@ interface Question {
     id: number;
     question: string;
     variants: Variant[];
-    answer: string[];
+    answer: number[];
 }
 
 interface Variant {

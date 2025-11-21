@@ -1,12 +1,11 @@
 interface RatingStatsProps {
+    averageRating: number;
     ratings: number[];
     totalRatings: number;
 }
 
-const RatingStats = ({ratings, totalRatings} : RatingStatsProps) => {
+const RatingStats = ({averageRating, ratings, totalRatings} : RatingStatsProps) => {
 
-    const averageRating = ratings.reduce((acc, num, i) => (acc*i) + num, 0)
-        / ratings.reduce((acc, num) => acc + num, 0);
 
     return (
         <div className="bg-[#0f1236] text-white w-full max-w-xl p-8 rounded-xl">
