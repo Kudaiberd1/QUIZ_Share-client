@@ -2,6 +2,7 @@ import type { QuizResponse } from "../../../5_entity/model/quiz/type.ts";
 import default_image from "../../../assets/default-quiz-image.png";
 import { Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import {useEffect, useState} from "react";
 
 const difficultyColor: Record<string, string> = {
     EASY: "text-green-400 bg-green-400/10",
@@ -11,11 +12,21 @@ const difficultyColor: Record<string, string> = {
 
 const QuizCard = ({ quiz }: { quiz: QuizResponse }) => {
     const navigate = useNavigate();
+    const [avgRate, setAvgRate] = useState(0.0);
 
-    const avgRate =
-        quiz.rate.length > 0
-            ? (quiz.rate.reduce((a, b) => a + b, 0) / quiz.rate.length).toFixed(1)
-            : "0.0";
+    useEffect(() => {
+        let avg = 0;
+        let sm=0;
+        for(let i = 0;i < quiz.rate.length; i++){
+            avg+=(quiz.rate[i]*(i+1));
+            sm+=quiz.rate[i];
+        }
+        if(sm!=0)
+            avg=avg/sm;
+
+        setAvgRate(avg);
+    },[quiz])
+
 
     return (
         <div

@@ -36,6 +36,19 @@ const TakingQuizPage = () => {
             .catch((err) => console.log("Error from taking quiz page", err));
     },[])
 
+    const handleSubmit = () => {
+        const result = CheckingTakenQuiz(quiz, selected);
+        api.post("/quiz/result",   {
+            quiz: quiz.id,
+            userAnswers: result.answers,
+            correct: result.correct,
+            wrong: result.wrong,
+            skipped: result.missed,
+            authorId: user.id
+        }).then((res) => {navigate(`/quiz/result/${res.data.id}`)})
+            .catch((err) => console.log(err, "from taken quiz page"));
+    }
+
     return (
         <div className={`flex min-h-screen`}>
             <div className={"flex-1 flex flex-col"}>
@@ -45,7 +58,7 @@ const TakingQuizPage = () => {
                     <div className={"md:bg-[#0f1236] md:p-[60px] mx-auto max-w-[800px] rounded-lg mt-[80px]"}>
                         <div className={"flex justify-between"}>
                             <p className={"text-[14px] text-neutral-400"}>Progress: {pageIndex+1}/5</p>
-                            {quiz && <Timer seconds={quiz?.takeTimeLimit} onComplete={() => navigate("/")} /> }
+                            {quiz && <Timer seconds={quiz?.takeTimeLimit} onComplete={() => navigate("/quiz/1")} /> }
                         </div>
                         <div className="w-full h-2 bg-blue-200 rounded overflow-hidden mt-[18px]">
                             <div
@@ -100,18 +113,7 @@ const TakingQuizPage = () => {
                                                   rounded-lg
                                                   transition
                                                   hover:bg-blue-600 hover:shadow-lg"
-                                            onClick={() => {
-                                                const result = CheckingTakenQuiz(quiz, selected);
-                                                api.post("/quiz/result",   {
-                                                    quiz: quiz.id,
-                                                    userAnswers: result.answers,
-                                                    correct: result.correct,
-                                                    wrong: result.wrong,
-                                                    skipped: result.missed,
-                                                    authorId: user.id
-                                                }).then((res) => {console.log(res.data); navigate("/")})
-                                                    .catch((err) => console.log(err, "from taken quiz page"));
-                                            }}
+                                            onClick={() => handleSubmit() }
                                         >
                                             Finish Quiz
                                         </button>

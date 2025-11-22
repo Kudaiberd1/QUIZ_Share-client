@@ -1,9 +1,5 @@
-import type {QuizResponse} from "../../../5_entity/model/quiz/type.ts";
+import type {AnswerProp, QuizResponse} from "../../../5_entity/model/quiz/type.ts";
 
-interface AnswerProp {
-    questionIndex: number;
-    selectedOptions: number[];
-}
 
 const arraysEqual = (arr1: number[], arr2: number[]) => {
     if (arr1.length !== arr2.length) return false;

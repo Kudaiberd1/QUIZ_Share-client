@@ -18,8 +18,3 @@ h1, h2, h3 {
     font-family: var(--font-secondary);
     font-weight: 700;
 }
-
-p, span, button, input {
-    font-family: var(--font-primary), serif;
-    font-weight: 400;
-}

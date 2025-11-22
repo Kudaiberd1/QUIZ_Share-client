@@ -33,11 +33,36 @@ export interface QuestionProp {
 }
 
 export interface QuizProp {
+    id: number;
     title: string;
     description: string;
     difficulty: string;
     subject: string;
     privacy: string;
     question: QuestionProp[];
+    authorId: number;
+}
+
+export interface AnswerProp {
+    questionIndex: number;
+    selectedOptions: number[];
+}
+
+export interface Result {
+    id: number;
+    quiz: QuizProp;
+    userAnswers: AnswerProp[];
+    statuses: string[];
+    correct: number;
+    wrong: number;
+    skipped: number;
+    rating: number;
+    authorId: number;
+}
+
+export interface Feedback {
+    id: number;
+    feedback: string;
+    star: number;
     authorId: number;
 }
