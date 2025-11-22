@@ -33,7 +33,7 @@ export interface QuestionProp {
 }
 
 export interface QuizProp {
-    id: number;
+    id?: number;
     title: string;
     description: string;
     difficulty: string;
@@ -41,6 +41,7 @@ export interface QuizProp {
     privacy: string;
     question: QuestionProp[];
     authorId: number;
+    takeTimeLimit?: number;
 }
 
 export interface AnswerProp {

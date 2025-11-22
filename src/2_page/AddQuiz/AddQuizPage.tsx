@@ -1,8 +1,8 @@
 import Sidebar from "../../3_widget/sidebar/Sidebar.tsx";
 import Navbar from "../../3_widget/navbar/Navbar.tsx";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import QuestionAccordion from "./QuestionAccordion.tsx";
-import type {QuestionProp, QuizProp} from "../../5_entity/model/quiz/type.ts";
+import type { QuestionProp, QuizProp } from "../../5_entity/model/quiz/type.ts";
 import {
     addOption,
     deleteOption,
@@ -11,21 +11,21 @@ import {
     updateVariant
 } from "./lib/ChanginStateFunctions.ts";
 import trash_icon from "../../6_shared/ui/icons/trash.svg"
-import {useUserStore} from "../../4_features/auth/model/store.ts";
+import { useUserStore } from "../../4_features/auth/model/store.ts";
 import api from "../../6_shared/api/axiosInstance.ts";
-import {useNavigate} from "react-router-dom";
-import {useQuizStore} from "../../4_features/quiz/model/store.ts";
+import { useNavigate } from "react-router-dom";
+import { useQuizStore } from "../../4_features/quiz/model/store.ts";
 
 
 const AddQuizPage = () => {
     const [value, setValue] = useState("public");
     const [show, setShow] = useState(0);
-    const [questions, setQuestions] = useState<QuestionProp[]>([{question: "", variants: ["", ""], answer: [] }]);
-    const [quiz, setQuiz] = useState<QuizProp>({title: "", description: "", difficulty: "EASY", subject: "", privacy: "PUBLIC", authorId: 0, question: []});
+    const [questions, setQuestions] = useState<QuestionProp[]>([{ question: "", variants: ["", ""], answer: [] }]);
+    const [quiz, setQuiz] = useState<QuizProp>({ title: "", description: "", difficulty: "EASY", subject: "", privacy: "PUBLIC", authorId: 0, question: [], takeTimeLimit: 300 });
     const [choosen, setChoosen] = useState(0);
-    const [image, setImage] = useState(null);
-    const [sendImage, setSendImage] = useState(null);
-    const [errors, setErrors] = useState<{[key: string]: string}>({});
+    const [image, setImage] = useState<string | null>(null);
+    const [sendImage, setSendImage] = useState<File | null>(null);
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isValid, setIsValid] = useState(false);
     const navigate = useNavigate();
 
@@ -33,16 +33,16 @@ const AddQuizPage = () => {
 
     const { setQuizzes } = useQuizStore();
 
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
-        if (file){
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
             setImage(URL.createObjectURL(file));
             setSendImage(file);
         }
     };
 
     const validateForm = () => {
-        const newErrors: {[key: string]: string} = {};
+        const newErrors: { [key: string]: string } = {};
 
         if (!quiz.title.trim()) {
             newErrors.title = "Title is required";
@@ -58,6 +58,10 @@ const AddQuizPage = () => {
 
         if (!quiz.privacy) {
             newErrors.privacy = "Privacy setting is required";
+        }
+
+        if (!quiz.takeTimeLimit || quiz.takeTimeLimit <= 0) {
+            newErrors.takeTimeLimit = "Time limit must be greater than 0";
         }
 
         if (!questions.length) {
@@ -93,10 +97,10 @@ const AddQuizPage = () => {
         setIsValid(valid);
     }, [quiz, questions]);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!isValid) {
+        if (!isValid || !user) {
             return;
         }
 
@@ -128,185 +132,352 @@ const AddQuizPage = () => {
         }
     };
 
-    return(
+    return (
         <div className={`flex min-h-screen`}>
             <Sidebar selected={1} />
             <div className={"flex-1 flex flex-col md:ms-[304px]"}>
                 <Navbar />
-                <main className="py-6 px-4 mt-15 md:py-[27px] md:px-12 my-3 h-full">
-                    <h1 className={"text-[32px] md:text-[36px] mb-6 md:mb-[27px]"}> Create New Quiz </h1>
+                <main className="py-6 px-4 mt-15 md:py-8 md:px-12 my-3 h-full">
+                    <h1 className="text-3xl md:text-4xl mb-8 font-bold text-white">Create New Quiz</h1>
 
                     <form onSubmit={handleSubmit}>
-                        <div className="flex flex-col md:flex-row md:space-x-5 space-y-6 md:space-y-0 mb-6 md:mb-[24px]">
+                        <div className="flex flex-col lg:flex-row lg:space-x-6 space-y-6 lg:space-y-0 mb-8">
                             {/* Quiz details */}
-                            <div className="rounded-xl p-[24px] bg-[rgb(30,30,56)] max-h-[856px] w-full md:max-w-[360px]">
-                                <h1 className="text-[22px] mb-4 md:mb-[16px]"> Quiz Details </h1>
-                                <div className="w-full md:max-w-[300px]">
-                                    <p className="text-[16px] mb-2 font-medium"> Quiz title </p>
-                                    <input
-                                        className="bg-[rgb(10,14,27)] p-2 mb-1 rounded-lg w-full md:max-w-[300px] border-1 border-gray-800"
-                                        placeholder="Quiz title..."
-                                        onChange={(e) => setQuiz({...quiz, title: e.target.value})}
-                                    />
-                                    {errors.title && <p className="text-red-500 text-sm mb-4 md:mb-[16px]">{errors.title}</p>}
-
-                                    <p className="text-[16px] mb-2 font-medium"> Description </p>
-                                    <textarea
-                                        className="bg-[rgb(10,14,27)] p-2 mb-5 md:mb-[20px] rounded-lg w-full md:max-w-[300px] border-1 border-gray-800"
-                                        placeholder="Description..."
-                                        onChange={(e) => setQuiz({...quiz, description: e.target.value})}
-                                    />
-
-                                    <p className="text-[16px] mb-2 font-medium"> Difficulty </p>
-                                    <div className="flex border-1 border-gray-800 rounded mb-1 md:mb-[4px]">
-                                        <button type="button" className={`bg-[rgb(10,10,24)] rounded-l w-full px-auto py-1 ${choosen==0 && "bg-[rgb(32,35,54)] text-[rgb(128,191,249)]"}`} onClick={() => {setChoosen(0); setQuiz({...quiz, difficulty: "EASY"}) }}> Easy </button>
-                                        <button type="button" className={`bg-[rgb(10,10,24)] w-full px-auto py-1 ${choosen==1 && "bg-[rgb(32,35,54)] text-[rgb(128,191,249)]"}`} onClick={() => {setChoosen(1); setQuiz({...quiz, difficulty: "MEDIUM"}) }}> Medium </button>
-                                        <button type="button" className={`bg-[rgb(10,10,24)] rounded-r w-full px-auto py-1 ${choosen==2 && "bg-[rgb(32,35,54)] text-[rgb(128,191,249)]"}`} onClick={() => {setChoosen(2); setQuiz({...quiz, difficulty: "HARD"}) }}> Hard </button>
-                                    </div>
-                                    {errors.difficulty && <p className="text-red-500 text-sm mb-4 md:mb-[16px]">{errors.difficulty}</p>}
-
-                                    <label className="text-[16px] font-medium">Quiz Image</label>
-                                    <div
-                                        className="mt-2 mb-2.5 w-full h-40 bg-[#15162C] border border-[#2A2D43] rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-[#1e2037] transition relative overflow-hidden"
-                                    >
-                                        {/* Image preview */}
-                                        {image && (
-                                            <img
-                                                src={image}
-                                                alt="Preview"
-                                                className="absolute inset-0 w-full h-full object-cover rounded-xl"
-                                            />
-                                        )}
-
-                                        {!image && (
-                                            <div className="flex flex-col items-center text-gray-400">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    className="h-10 w-10 mb-2 opacity-60"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    stroke="currentColor"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={1.5}
-                                                        d="M3 16l6-6 4 4 8-8M14 14l1 1"
-                                                    />
-                                                </svg>
-                                                <p className="text-sm">Click to choose image</p>
-                                                <p className="text-xs opacity-60">PNG, JPG (max 5MB)</p>
-                                            </div>
-                                        )}
-
+                            <div className="rounded-2xl p-6 lg:p-8 bg-gradient-to-br from-[rgb(30,30,56)] to-[rgb(25,25,48)] shadow-2xl w-full lg:max-w-[400px] lg:sticky lg:top-6 lg:h-fit">
+                                <h2 className="text-2xl mb-6 font-semibold text-white">Quiz Details</h2>
+                                <div className="space-y-5">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">Quiz Title</label>
                                         <input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={handleImageUpload}
-                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                            className="bg-[rgb(10,14,27)] p-3 rounded-xl w-full border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all outline-none text-white placeholder-gray-500"
+                                            placeholder="Enter quiz title..."
+                                            value={quiz.title}
+                                            onChange={(e) => setQuiz({ ...quiz, title: e.target.value })}
+                                        />
+                                        {errors.title && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
+                                            <span>⚠</span> {errors.title}
+                                        </p>}
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                                        <textarea
+                                            className="bg-[rgb(10,14,27)] p-3 rounded-xl w-full border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all outline-none text-white placeholder-gray-500 resize-none min-h-[100px]"
+                                            placeholder="Describe your quiz..."
+                                            value={quiz.description}
+                                            onChange={(e) => setQuiz({ ...quiz, description: e.target.value })}
                                         />
                                     </div>
 
-                                    <p className="text-[16px] mb-2 font-medium"> Subject </p>
-                                    <input
-                                        className="bg-[rgb(10,14,27)] p-2 mb-1 rounded-lg w-full md:max-w-[300px] border-1 border-gray-800"
-                                        placeholder="Subject..."
-                                        onChange={(e) => setQuiz({...quiz, subject: e.target.value})}
-                                    />
-                                    {errors.subject && <p className="text-red-500 text-sm mb-4 md:mb-[16px]">{errors.subject}</p>}
-
-                                    <p className="text-[16px] mb-2 w-full max-w-[300px] font-medium"> Visibility </p>
-                                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6">
-                                        <label className="flex items-center gap-2 cursor-pointer">
-                                            <input
-                                                type="radio"
-                                                name="visibility"
-                                                value="public"
-                                                checked={value === "public"}
-                                                onChange={() => {setValue("public"); {
-                                                    if (value == "public") {
-                                                        setQuiz({...quiz, privacy: "PUBLIC"})
-                                                    } else {
-                                                        setQuiz({...quiz, privacy: "PRIVATE"})
-                                                    }} }}
-                                                className="h-4 w-4 accent-blue-500"
-                                            />
-                                            <span>Public</span>
-                                        </label>
-
-                                        <label className="flex items-center gap-2 cursor-pointer">
-                                            <input
-                                                type="radio"
-                                                name="visibility"
-                                                value="private"
-                                                checked={value === "private"}
-                                                onChange={() => setValue("private")}
-                                                className="h-4 w-4 accent-blue-500"
-                                            />
-                                            <span>Private</span>
-                                        </label>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">Difficulty Level</label>
+                                        <div className="flex gap-2 rounded-xl overflow-hidden border border-gray-700">
+                                            <button
+                                                type="button"
+                                                className={`flex-1 px-4 py-2.5 text-sm font-medium transition-all ${choosen === 0
+                                                    ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg"
+                                                    : "bg-[rgb(10,10,24)] text-gray-400 hover:text-white"
+                                                    }`}
+                                                onClick={() => { setChoosen(0); setQuiz({ ...quiz, difficulty: "EASY" }) }}
+                                            >
+                                                Easy
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`flex-1 px-4 py-2.5 text-sm font-medium transition-all ${choosen === 1
+                                                    ? "bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg"
+                                                    : "bg-[rgb(10,10,24)] text-gray-400 hover:text-white"
+                                                    }`}
+                                                onClick={() => { setChoosen(1); setQuiz({ ...quiz, difficulty: "MEDIUM" }) }}
+                                            >
+                                                Medium
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`flex-1 px-4 py-2.5 text-sm font-medium transition-all ${choosen === 2
+                                                    ? "bg-gradient-to-r from-red-500 to-pink-600 text-white shadow-lg"
+                                                    : "bg-[rgb(10,10,24)] text-gray-400 hover:text-white"
+                                                    }`}
+                                                onClick={() => { setChoosen(2); setQuiz({ ...quiz, difficulty: "HARD" }) }}
+                                            >
+                                                Hard
+                                            </button>
+                                        </div>
+                                        {errors.difficulty && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
+                                            <span>⚠</span> {errors.difficulty}
+                                        </p>}
                                     </div>
-                                    {errors.privacy && <p className="text-red-500 text-sm mb-4 md:mb-[16px]">{errors.privacy}</p>}
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">Time Limit (seconds)</label>
+                                        <div className="relative">
+                                            <input
+                                                type="number"
+                                                min="1"
+                                                step="1"
+                                                className="bg-[rgb(10,14,27)] p-3 rounded-xl w-full border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all outline-none text-white placeholder-gray-500 pr-12"
+                                                placeholder="300"
+                                                value={quiz.takeTimeLimit || ""}
+                                                onChange={(e) => setQuiz({ ...quiz, takeTimeLimit: parseInt(e.target.value) || 0 })}
+                                            />
+                                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">sec</span>
+                                        </div>
+                                        {quiz.takeTimeLimit && (
+                                            <p className="text-xs text-gray-400 mt-1.5">
+                                                {Math.floor(quiz.takeTimeLimit / 60)} min {quiz.takeTimeLimit % 60} sec
+                                            </p>
+                                        )}
+                                        {errors.takeTimeLimit && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
+                                            <span>⚠</span> {errors.takeTimeLimit}
+                                        </p>}
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">Quiz Image</label>
+                                        <div
+                                            className="w-full h-48 bg-gradient-to-br from-[#15162C] to-[#0f1120] border-2 border-dashed border-gray-700 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-[#1e2037] transition-all relative overflow-hidden group"
+                                        >
+                                            {/* Image preview */}
+                                            {image && (
+                                                <>
+                                                    <img
+                                                        src={image}
+                                                        alt="Preview"
+                                                        className="absolute inset-0 w-full h-full object-cover rounded-xl"
+                                                    />
+                                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                        <span className="text-white text-sm font-medium">Change Image</span>
+                                                    </div>
+                                                </>
+                                            )}
+
+                                            {!image && (
+                                                <div className="flex flex-col items-center text-gray-400">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        className="h-12 w-12 mb-3 opacity-60 group-hover:opacity-100 transition-opacity"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                        />
+                                                    </svg>
+                                                    <p className="text-sm font-medium">Click to upload image</p>
+                                                    <p className="text-xs opacity-60 mt-1">PNG, JPG (max 5MB)</p>
+                                                </div>
+                                            )}
+
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleImageUpload}
+                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">Subject</label>
+                                        <input
+                                            className="bg-[rgb(10,14,27)] p-3 rounded-xl w-full border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all outline-none text-white placeholder-gray-500"
+                                            placeholder="e.g., Mathematics, Science..."
+                                            value={quiz.subject}
+                                            onChange={(e) => setQuiz({ ...quiz, subject: e.target.value })}
+                                        />
+                                        {errors.subject && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
+                                            <span>⚠</span> {errors.subject}
+                                        </p>}
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-300 mb-3">Visibility</label>
+                                        <div className="flex gap-4">
+                                            <label className="flex items-center gap-2.5 cursor-pointer group">
+                                                <input
+                                                    type="radio"
+                                                    name="visibility"
+                                                    value="public"
+                                                    checked={value === "public"}
+                                                    onChange={() => {
+                                                        setValue("public");
+                                                        setQuiz({ ...quiz, privacy: "PUBLIC" });
+                                                    }}
+                                                    className="h-4 w-4 accent-blue-500 cursor-pointer"
+                                                />
+                                                <span className="text-gray-300 group-hover:text-white transition-colors">Public</span>
+                                            </label>
+
+                                            <label className="flex items-center gap-2.5 cursor-pointer group">
+                                                <input
+                                                    type="radio"
+                                                    name="visibility"
+                                                    value="private"
+                                                    checked={value === "private"}
+                                                    onChange={() => {
+                                                        setValue("private");
+                                                        setQuiz({ ...quiz, privacy: "PRIVATE" });
+                                                    }}
+                                                    className="h-4 w-4 accent-blue-500 cursor-pointer"
+                                                />
+                                                <span className="text-gray-300 group-hover:text-white transition-colors">Private</span>
+                                            </label>
+                                        </div>
+                                        {errors.privacy && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
+                                            <span>⚠</span> {errors.privacy}
+                                        </p>}
+                                    </div>
                                 </div>
                             </div>
 
                             {/* Questions */}
-                            <div className="rounded-xl p-4 md:p-[24px] bg-[rgb(30,30,56)] w-full">
+                            <div className="rounded-2xl p-6 lg:p-8 bg-gradient-to-br from-[rgb(30,30,56)] to-[rgb(25,25,48)] shadow-2xl w-full flex-1">
                                 {/* Header */}
-                                <div className="flex flex-col sm:flex-row justify-between mb-4 md:mb-[18px] gap-3 sm:gap-0">
-                                    <h1 className="text-[22px]"> Questions </h1>
-                                    <p className="border p-2 bg-[rgb(41,69,214)] border-[rgb(41,69,214)] rounded-xl text-[16px] cursor-pointer w-full sm:w-auto text-center" onClick={() => setQuestions([...questions, {question: "", variants: ["", ""], answer: [] }])}> Add new question </p>
+                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                                    <div>
+                                        <h2 className="text-2xl font-semibold text-white mb-1">Questions</h2>
+                                        <p className="text-sm text-gray-400">Add and manage quiz questions</p>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 w-full sm:w-auto justify-center"
+                                        onClick={() => setQuestions([...questions, { question: "", variants: ["", ""], answer: [] }])}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                                        </svg>
+                                        Add New Question
+                                    </button>
                                 </div>
-                                {errors.questions && <p className="text-red-500 text-sm mb-2 md:mb-[8px]">{errors.questions}</p>}
+                                {errors.questions && <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl">
+                                    <p className="text-red-400 text-sm flex items-center gap-2">
+                                        <span>⚠</span> {errors.questions}
+                                    </p>
+                                </div>}
 
-                                {questions.map((question, index) =>
-                                    <>
-                                        <QuestionAccordion title={`Question ${index+1}: ${question.question}`} key={index} >
-                                            <div className="mt-4 md:mt-[18px]">
-                                                <p className="text-[16px] pb-4 md:pb-[16px]"> Question </p>
-                                                <textarea className="bg-[rgb(10,14,27)] w-full mb-1 rounded-lg p-2" placeholder="Question description..." onChange={(e) => updateQuestionField(index, "question", e.target.value, setQuestions)} />
-                                                {errors[`question_${index}`] && <p className="text-red-500 text-sm mb-3 md:mb-[12px]">{errors[`question_${index}`]}</p>}
-                                                <p className="mb-4 md:mb-[18px]"> Options </p>
-                                                {errors[`question_${index}_variants`] && <p className="text-red-500 text-sm mb-2 md:mb-[8px]">{errors[`question_${index}_variants`]}</p>}
-                                                <div className="space-y-3">
-                                                    {question.variants.map((option, oIndex) =>
-                                                        <>
-                                                            <div className="flex border-2 border-[rgb(36,40,63)] bg-[rgb(10,14,27)] p-1 pl-3 rounded-lg" key={oIndex} onMouseEnter={() => setShow(oIndex+1)} onMouseLeave={() => setShow(0)}>
-                                                                <input type="checkbox" className="accent-white w-4 h-4 my-auto mr-3" onChange={() => toggleAnswer(index, oIndex, setQuestions)} />
-                                                                <input className="p-2 rounded-lg bg-[rgb(10,14,27)] w-full" placeholder="Option..." onChange={(e) => updateVariant(index, oIndex, e.target.value, setQuestions)} />
-                                                                <img src={trash_icon} className={`text-red-500 p-2 ${(show!=oIndex+1 || question.variants.length==2) && "hidden" } `} onClick={() => deleteOption(index, oIndex, setQuestions)} />
-                                                            </div>
-                                                            {errors[`question_${index}_variant_${oIndex}`] ? <p key={`error_${index}_${oIndex}`} className="text-red-500 text-sm mb-2 md:mb-[8px]">{errors[`question_${index}_variant_${oIndex}`]}</p> : null}
-                                                        </>
-                                                    )}
-
-                                                    <div className="justify-end flex space-x-2">
-                                                        <p className="p-2 border bg-red-500 border-red-500 rounded-lg mt-4 cursor-pointer w-full max-w-[160px] text-center" onClick={() => deleteQuestion({qIndex : index, setQuestions : setQuestions})}> Delete Question </p>
-                                                        <p
-                                                            className={`p-2 border bg-[rgb(41,69,214)] border-[rgb(41,69,214)] rounded-lg mt-4 cursor-pointer w-full max-w-[160px] text-center ${question.variants.length==8 ? "hidden": " "}`}
-                                                            onClick={() => addOption({ qIndex: index, setQuestions })}
-                                                        > + Add Option </p>
+                                <div className="space-y-4">
+                                    {questions.map((question, index) =>
+                                        <div key={index}>
+                                            <QuestionAccordion title={`Question ${index + 1}${question.question ? `: ${question.question.substring(0, 50)}${question.question.length > 50 ? '...' : ''}` : ''}`}>
+                                                <div className="mt-6 space-y-5">
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-300 mb-2">Question Text</label>
+                                                        <textarea
+                                                            className="bg-[rgb(10,14,27)] w-full rounded-xl p-3 border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all outline-none text-white placeholder-gray-500 resize-none min-h-[100px]"
+                                                            placeholder="Enter your question here..."
+                                                            value={question.question}
+                                                            onChange={(e) => updateQuestionField(index, "question", e.target.value, setQuestions)}
+                                                        />
+                                                        {errors[`question_${index}`] && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
+                                                            <span>⚠</span> {errors[`question_${index}`]}
+                                                        </p>}
                                                     </div>
 
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-300 mb-3">Answer Options</label>
+                                                        {errors[`question_${index}_variants`] && <div className="mb-3 p-2 bg-red-500/10 border border-red-500/30 rounded-lg">
+                                                            <p className="text-red-400 text-xs flex items-center gap-1">
+                                                                <span>⚠</span> {errors[`question_${index}_variants`]}
+                                                            </p>
+                                                        </div>}
+                                                        <div className="space-y-3">
+                                                            {question.variants.map((option, oIndex) =>
+                                                                <div key={oIndex} className="group">
+                                                                    <div
+                                                                        className="flex items-center gap-3 border-2 border-gray-700 bg-[rgb(10,14,27)] rounded-xl p-3 hover:border-blue-500/50 transition-all"
+                                                                        onMouseEnter={() => setShow(oIndex + 1)}
+                                                                        onMouseLeave={() => setShow(0)}
+                                                                    >
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            className="w-5 h-5 accent-blue-500 cursor-pointer flex-shrink-0"
+                                                                            checked={question.answer.includes(oIndex)}
+                                                                            onChange={() => toggleAnswer(index, oIndex, setQuestions)}
+                                                                        />
+                                                                        <input
+                                                                            className="flex-1 bg-transparent text-white placeholder-gray-500 outline-none"
+                                                                            placeholder={`Option ${oIndex + 1}...`}
+                                                                            value={option}
+                                                                            onChange={(e) => updateVariant(index, oIndex, e.target.value, setQuestions)}
+                                                                        />
+                                                                        {question.variants.length > 2 && (
+                                                                            <button
+                                                                                type="button"
+                                                                                className={`opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-red-500/20 rounded-lg ${(show !== oIndex + 1) && "hidden"}`}
+                                                                                onClick={() => deleteOption(index, oIndex, setQuestions)}
+                                                                            >
+                                                                                <img src={trash_icon} alt="Delete" className="w-5 h-5" />
+                                                                            </button>
+                                                                        )}
+                                                                    </div>
+                                                                    {errors[`question_${index}_variant_${oIndex}`] && (
+                                                                        <p className="text-red-400 text-xs mt-1.5 ml-8 flex items-center gap-1">
+                                                                            <span>⚠</span> {errors[`question_${index}_variant_${oIndex}`]}
+                                                                        </p>
+                                                                    )}
+                                                                </div>
+                                                            )}
+
+                                                            {question.variants.length < 8 && (
+                                                                <button
+                                                                    type="button"
+                                                                    className="w-full py-2.5 px-4 border-2 border-dashed border-gray-600 hover:border-blue-500 text-gray-400 hover:text-blue-400 rounded-xl transition-all flex items-center justify-center gap-2 font-medium"
+                                                                    onClick={() => addOption({ qIndex: index, setQuestions })}
+                                                                >
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                                        <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                                                                    </svg>
+                                                                    Add Option
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex justify-end pt-2">
+                                                        <button
+                                                            type="button"
+                                                            className="px-5 py-2.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 text-red-400 font-medium rounded-xl transition-all flex items-center gap-2"
+                                                            onClick={() => deleteQuestion({ qIndex: index, setQuestions: setQuestions })}
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                                                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                            </svg>
+                                                            Delete Question
+                                                        </button>
+                                                    </div>
                                                 </div>
-
-                                            </div>
-                                        </QuestionAccordion>
-                                        {errors[`question_${index}_answer`] && (
-                                            <p className="text-red-500 text-sm mb-2 md:mb-[8px]">{errors[`question_${index}_answer`]}</p>
-                                        )}
-                                    </>
-
-                                )}
+                                            </QuestionAccordion>
+                                            {errors[`question_${index}_answer`] && (
+                                                <div className="mt-2 p-3 bg-red-500/10 border border-red-500/30 rounded-xl">
+                                                    <p className="text-red-400 text-sm flex items-center gap-2">
+                                                        <span>⚠</span> {errors[`question_${index}_answer`]}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
-                        <div className="flex bg-[rgb(30,30,56)] w-full justify-end p-4 md:p-[24px] rounded-lg">
+                        <div className="flex justify-end p-6 bg-gradient-to-br from-[rgb(30,30,56)] to-[rgb(25,25,48)] rounded-2xl shadow-2xl mt-6">
                             <button
-                                className={`w-full md:w-auto border py-2 px-3 bg-[rgb(41,69,214)] border-[rgb(41,69,214)] rounded-xl text-[16px] ${!isValid && "bg-blue-900 cursor-no-drop"}`}
+                                className={`px-8 py-3.5 rounded-xl font-semibold text-white transition-all duration-200 flex items-center gap-2 ${isValid
+                                    ? "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg hover:shadow-xl transform hover:scale-105"
+                                    : "bg-gray-700 cursor-not-allowed opacity-50"
+                                    }`}
                                 disabled={!isValid}
                                 type="submit"
-                            > Publish Quiz </button>
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                                Publish Quiz
+                            </button>
                         </div>
                     </form>
                 </main>
