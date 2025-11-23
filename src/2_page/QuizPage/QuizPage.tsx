@@ -1,6 +1,5 @@
 import Sidebar from "../../3_widget/sidebar/Sidebar.tsx";
 import Navbar from "../../3_widget/navbar/Navbar.tsx";
-import default_image from "../../assets/default-quiz-image.png"
 import { FaStar } from 'react-icons/fa';
 import RatingStats from "../../6_shared/ui/RatingStats.tsx";
 import { useNavigate, useParams } from "react-router-dom";

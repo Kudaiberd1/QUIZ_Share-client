@@ -58,7 +58,7 @@ const TakingQuizPage = () => {
                     <div className={"md:bg-[#0f1236] md:p-[60px] mx-auto max-w-[800px] rounded-lg mt-[80px]"}>
                         <div className={"flex justify-between"}>
                             <p className={"text-[14px] text-neutral-400"}>Progress: {pageIndex + 1}/5</p>
-                            {quiz && <Timer seconds={quiz?.takeTimeLimit} onComplete={() => navigate(`/quiz/${id}/result`)} />}
+                            {quiz && <Timer seconds={quiz?.takeTimeLimit} onComplete={() => handleSubmit()} />}
                         </div>
                         <div className="w-full h-2 bg-blue-200 rounded overflow-hidden mt-[18px]">
                             <div

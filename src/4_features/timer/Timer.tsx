@@ -20,7 +20,7 @@ const Timer: React.FC<TimerProps> = ({seconds, onComplete}) => {
 
     return (
         <div className="">
-                <span className="text-blue-700 font-bold">{count}s</span>
+                <span className="text-blue-700 font-bold">{Math.floor(count/60)!=0 && Math.floor(count/60)} {Math.floor(count/60)!=0 && "minute"} {count%60} second</span>
         </div>
     );
 };

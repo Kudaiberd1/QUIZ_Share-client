@@ -169,8 +169,8 @@ const ResultPage = () => {
 
                                     <div className={"col-span-3 row-span-1 bg-[rgb(30,30,57)] rounded-xl w-full p-[24px]"}>
                                         <h1 className={"text-[20px] "}> What's Next? </h1>
-                                        <button className={`my-[16px] rounded-xl w-full bg-blue-700 py-3 `} onClick={() => navigate("/")}> Back to Home
-                                        </button>
+                                        <button className={`my-[16px] rounded-xl w-full bg-blue-700 py-3 `} onClick={() => navigate("/")}> Back to Home</button>
+                                        <button className={`mb-[16px] rounded-xl w-full bg-blue-700 py-3 `} onClick={() => navigate(`/quiz/${quizId}/taking`)}> Retake </button>
                                         <button className={`rounded-xl w-full bg-blue-700 py-3 `}> View Dashboard</button>
                                     </div>
                                 </div>
