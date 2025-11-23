@@ -171,7 +171,7 @@ const ResultPage = () => {
                                         <h1 className={"text-[20px] "}> What's Next? </h1>
                                         <button className={`my-[16px] rounded-xl w-full bg-blue-700 py-3 `} onClick={() => navigate("/")}> Back to Home</button>
                                         <button className={`mb-[16px] rounded-xl w-full bg-blue-700 py-3 `} onClick={() => navigate(`/quiz/${quizId}/taking`)}> Retake </button>
-                                        <button className={`rounded-xl w-full bg-blue-700 py-3 `}> View Dashboard</button>
+                                        <button className={`rounded-xl w-full bg-blue-700 py-3 `} onClick={() => navigate("/dashboard")}> View Dashboard</button>
                                     </div>
                                 </div>
                             </div>

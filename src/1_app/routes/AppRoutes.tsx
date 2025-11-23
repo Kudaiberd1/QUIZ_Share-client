@@ -9,6 +9,7 @@ import QuizPage from "../../2_page/QuizPage/QuizPage.tsx";
 import LogOut from "../../2_page/LogOut.tsx";
 import TakingQuizPage from "../../2_page/TakingQuiz/TakingQuizPage.tsx";
 import ResultPage from "../../2_page/TakingQuiz/ResultPage.tsx";
+import DashboardPage from "../../2_page/Dashboard/DashboardPage.tsx";
 
 const AppRoute = () => {
     return(
@@ -21,6 +22,7 @@ const AppRoute = () => {
                     <Route path={"/quiz/:id"} element={<QuizPage />} />
                     <Route path={"/quiz/:id/taking"} element={<TakingQuizPage />} />
                     <Route path={"quiz/result/:id"} element={<ResultPage />} />
+                    <Route path={"/dashboard"} element={<DashboardPage />} />
                 </Route>
                 <Route path={"/register"} element={<Register />} />
                 <Route path={"/login"} element={<Login />} />

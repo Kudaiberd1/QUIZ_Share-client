@@ -39,7 +39,7 @@ export interface QuizProp {
     difficulty: string;
     subject: string;
     privacy: string;
-    question: QuestionProp[];
+    questions: QuestionProp[];
     authorId: number;
     takeTimeLimit?: number;
 }
