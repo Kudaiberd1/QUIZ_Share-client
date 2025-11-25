@@ -38,7 +38,7 @@ const Sidebar = ({selected} : Prop) => {
                     <SidebarItem icon={home} label={"Home"} to={"/"} isActive={selected==0} />
                     <SidebarItem icon={add} label={"Create Quiz"} to={"/add"} isActive={selected==1} />
                     <SidebarItem icon={grid} label={"Dashboard"} to={"/dashboard"} isActive={selected==2} />
-                    <SidebarItem icon={chat} label={"Messages"} to={"/"} isActive={selected==3} />
+                    <SidebarItem icon={chat} label={"Messages"} to={"/messages"} isActive={selected==3} />
                     <SidebarItem icon={user} label={"Profile"} to={"/"} isActive={selected==4} />
                 </div>
             </aside>

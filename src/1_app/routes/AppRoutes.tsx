@@ -10,6 +10,7 @@ import LogOut from "../../2_page/LogOut.tsx";
 import TakingQuizPage from "../../2_page/TakingQuiz/TakingQuizPage.tsx";
 import ResultPage from "../../2_page/TakingQuiz/ResultPage.tsx";
 import DashboardPage from "../../2_page/Dashboard/DashboardPage.tsx";
+import InboxPage from "../../2_page/InboxPage/InboxPage.tsx";
 
 const AppRoute = () => {
     return(
@@ -23,6 +24,7 @@ const AppRoute = () => {
                     <Route path={"/quiz/:id/taking"} element={<TakingQuizPage />} />
                     <Route path={"quiz/result/:id"} element={<ResultPage />} />
                     <Route path={"/dashboard"} element={<DashboardPage />} />
+                    <Route path={"/messages"} element={<InboxPage />} />
                 </Route>
                 <Route path={"/register"} element={<Register />} />
                 <Route path={"/login"} element={<Login />} />
