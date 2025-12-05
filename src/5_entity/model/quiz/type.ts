@@ -66,6 +66,7 @@ export interface Feedback {
     feedback: string;
     star: number;
     authorId: number;
+    toUserId: number;
     quizId: number;
     readed: boolean;
     createdAt: string;

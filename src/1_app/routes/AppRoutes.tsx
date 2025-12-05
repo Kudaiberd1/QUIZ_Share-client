@@ -11,6 +11,7 @@ import TakingQuizPage from "../../2_page/TakingQuiz/TakingQuizPage.tsx";
 import ResultPage from "../../2_page/TakingQuiz/ResultPage.tsx";
 import DashboardPage from "../../2_page/Dashboard/DashboardPage.tsx";
 import InboxPage from "../../2_page/InboxPage/InboxPage.tsx";
+import LoginCallBack from "../../2_page/Authorization/LoginCallBack.tsx";
 
 const AppRoute = () => {
     return(
@@ -28,6 +29,7 @@ const AppRoute = () => {
                 </Route>
                 <Route path={"/register"} element={<Register />} />
                 <Route path={"/login"} element={<Login />} />
+                <Route path={"/oauth"} element={<LoginCallBack />} />
                 <Route path={"/logout"} element={<LogOut />} />
             </Routes>
         </>

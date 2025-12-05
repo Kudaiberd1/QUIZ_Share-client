@@ -19,7 +19,6 @@ export const useLoginStore = create<LoginStore>()(
             set({ token });
             //console.log(token.tokenValue.accessToken, token.rememberMe);
             localStorage.setItem("Authorization", JSON.stringify(token.tokenValue.accessToken));
-            localStorage.setItem("RememberMe", token.rememberMe);
         },
         logout: () => set({ token: null }),
     }),

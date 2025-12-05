@@ -21,11 +21,12 @@ const AddQuizPage = () => {
     const [value, setValue] = useState("public");
     const [show, setShow] = useState(0);
     const [questions, setQuestions] = useState<QuestionProp[]>([{ question: "", variants: ["", ""], answer: [] }]);
-    const [quiz, setQuiz] = useState<QuizProp>({ title: "", description: "", difficulty: "EASY", subject: "", privacy: "PUBLIC", authorId: 0, question: [], takeTimeLimit: 300 });
+    const [quiz, setQuiz] = useState<QuizProp>({ title: "", description: "", difficulty: "EASY", subject: "", privacy: "PUBLIC", authorId: 0, questions: [], takeTimeLimit: 300 });
     const [choosen, setChoosen] = useState(0);
     const [image, setImage] = useState<string | null>(null);
     const [sendImage, setSendImage] = useState<File | null>(null);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [showErrors, setShowErrors] = useState(false);
     const [isValid, setIsValid] = useState(false);
     const navigate = useNavigate();
 
@@ -92,6 +93,8 @@ const AddQuizPage = () => {
         return Object.keys(newErrors).length === 0;
     };
 
+    const getError = (key: string) => (showErrors ? errors[key] : undefined);
+
     useEffect(() => {
         const valid = validateForm();
         setIsValid(valid);
@@ -100,14 +103,17 @@ const AddQuizPage = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!isValid || !user) {
+        setShowErrors(true);
+        const formIsValid = validateForm();
+
+        if (!formIsValid || !user) {
             return;
         }
 
         const quizPayload = {
             ...quiz,
             authorId: user.id,
-            question: questions
+            questions
         };
 
         const formData = new FormData();
@@ -154,8 +160,8 @@ const AddQuizPage = () => {
                                             value={quiz.title}
                                             onChange={(e) => setQuiz({ ...quiz, title: e.target.value })}
                                         />
-                                        {errors.title && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
-                                            <span>⚠</span> {errors.title}
+                                        {getError("title") && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
+                                            <span>⚠</span> {getError("title")}
                                         </p>}
                                     </div>
 
@@ -203,8 +209,8 @@ const AddQuizPage = () => {
                                                 Hard
                                             </button>
                                         </div>
-                                        {errors.difficulty && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
-                                            <span>⚠</span> {errors.difficulty}
+                                        {getError("difficulty") && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
+                                            <span>⚠</span> {getError("difficulty")}
                                         </p>}
                                     </div>
 
@@ -227,8 +233,8 @@ const AddQuizPage = () => {
                                                 {Math.floor(quiz.takeTimeLimit / 60)} min {quiz.takeTimeLimit % 60} sec
                                             </p>
                                         )}
-                                        {errors.takeTimeLimit && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
-                                            <span>⚠</span> {errors.takeTimeLimit}
+                                        {getError("takeTimeLimit") && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
+                                            <span>⚠</span> {getError("takeTimeLimit")}
                                         </p>}
                                     </div>
 
@@ -289,8 +295,8 @@ const AddQuizPage = () => {
                                             value={quiz.subject}
                                             onChange={(e) => setQuiz({ ...quiz, subject: e.target.value })}
                                         />
-                                        {errors.subject && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
-                                            <span>⚠</span> {errors.subject}
+                                        {getError("subject") && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
+                                            <span>⚠</span> {getError("subject")}
                                         </p>}
                                     </div>
 
@@ -327,8 +333,8 @@ const AddQuizPage = () => {
                                                 <span className="text-gray-300 group-hover:text-white transition-colors">Private</span>
                                             </label>
                                         </div>
-                                        {errors.privacy && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
-                                            <span>⚠</span> {errors.privacy}
+                                        {getError("privacy") && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
+                                            <span>⚠</span> {getError("privacy")}
                                         </p>}
                                     </div>
                                 </div>
@@ -353,113 +359,119 @@ const AddQuizPage = () => {
                                         Add New Question
                                     </button>
                                 </div>
-                                {errors.questions && <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl">
+                                {getError("questions") && <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl">
                                     <p className="text-red-400 text-sm flex items-center gap-2">
-                                        <span>⚠</span> {errors.questions}
+                                        <span>⚠</span> {getError("questions")}
                                     </p>
                                 </div>}
 
                                 <div className="space-y-4">
-                                    {questions.map((question, index) =>
-                                        <div key={index}>
-                                            <QuestionAccordion title={`Question ${index + 1}${question.question ? `: ${question.question.substring(0, 50)}${question.question.length > 50 ? '...' : ''}` : ''}`}>
-                                                <div className="mt-6 space-y-5">
-                                                    <div>
-                                                        <label className="block text-sm font-medium text-gray-300 mb-2">Question Text</label>
-                                                        <textarea
-                                                            className="bg-[rgb(10,14,27)] w-full rounded-xl p-3 border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all outline-none text-white placeholder-gray-500 resize-none min-h-[100px]"
-                                                            placeholder="Enter your question here..."
-                                                            value={question.question}
-                                                            onChange={(e) => updateQuestionField(index, "question", e.target.value, setQuestions)}
-                                                        />
-                                                        {errors[`question_${index}`] && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
-                                                            <span>⚠</span> {errors[`question_${index}`]}
-                                                        </p>}
-                                                    </div>
+                                    {questions.map((question, index) => {
+                                        const questionError = getError(`question_${index}`);
+                                        const variantsError = getError(`question_${index}_variants`);
+                                        const answerError = getError(`question_${index}_answer`);
 
-                                                    <div>
-                                                        <label className="block text-sm font-medium text-gray-300 mb-3">Answer Options</label>
-                                                        {errors[`question_${index}_variants`] && <div className="mb-3 p-2 bg-red-500/10 border border-red-500/30 rounded-lg">
-                                                            <p className="text-red-400 text-xs flex items-center gap-1">
-                                                                <span>⚠</span> {errors[`question_${index}_variants`]}
-                                                            </p>
-                                                        </div>}
-                                                        <div className="space-y-3">
-                                                            {question.variants.map((option, oIndex) =>
-                                                                <div key={oIndex} className="group">
-                                                                    <div
-                                                                        className="flex items-center gap-3 border-2 border-gray-700 bg-[rgb(10,14,27)] rounded-xl p-3 hover:border-blue-500/50 transition-all"
-                                                                        onMouseEnter={() => setShow(oIndex + 1)}
-                                                                        onMouseLeave={() => setShow(0)}
-                                                                    >
-                                                                        <input
-                                                                            type="checkbox"
-                                                                            className="w-5 h-5 accent-blue-500 cursor-pointer flex-shrink-0"
-                                                                            checked={question.answer.includes(oIndex)}
-                                                                            onChange={() => toggleAnswer(index, oIndex, setQuestions)}
-                                                                        />
-                                                                        <input
-                                                                            className="flex-1 bg-transparent text-white placeholder-gray-500 outline-none"
-                                                                            placeholder={`Option ${oIndex + 1}...`}
-                                                                            value={option}
-                                                                            onChange={(e) => updateVariant(index, oIndex, e.target.value, setQuestions)}
-                                                                        />
-                                                                        {question.variants.length > 2 && (
-                                                                            <button
-                                                                                type="button"
-                                                                                className={`opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-red-500/20 rounded-lg ${(show !== oIndex + 1) && "hidden"}`}
-                                                                                onClick={() => deleteOption(index, oIndex, setQuestions)}
-                                                                            >
-                                                                                <img src={trash_icon} alt="Delete" className="w-5 h-5" />
-                                                                            </button>
+                                        return (
+                                            <div key={index}>
+                                                <QuestionAccordion title={`Question ${index + 1}${question.question ? `: ${question.question.substring(0, 50)}${question.question.length > 50 ? '...' : ''}` : ''}`}>
+                                                    <div className="mt-6 space-y-5">
+                                                        <div>
+                                                            <label className="block text-sm font-medium text-gray-300 mb-2">Question Text</label>
+                                                            <textarea
+                                                                className="bg-[rgb(10,14,27)] w-full rounded-xl p-3 border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all outline-none text-white placeholder-gray-500 resize-none min-h-[100px]"
+                                                                placeholder="Enter your question here..."
+                                                                value={question.question}
+                                                                onChange={(e) => updateQuestionField(index, "question", e.target.value, setQuestions)}
+                                                            />
+                                                            {questionError && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
+                                                                <span>⚠</span> {questionError}
+                                                            </p>}
+                                                        </div>
+
+                                                        <div>
+                                                            <label className="block text-sm font-medium text-gray-300 mb-3">Answer Options</label>
+                                                            {variantsError && <div className="mb-3 p-2 bg-red-500/10 border border-red-500/30 rounded-lg">
+                                                                <p className="text-red-400 text-xs flex items-center gap-1">
+                                                                    <span>⚠</span> {variantsError}
+                                                                </p>
+                                                            </div>}
+                                                            <div className="space-y-3">
+                                                                {question.variants.map((option, oIndex) =>
+                                                                    <div key={oIndex} className="group">
+                                                                        <div
+                                                                            className="flex items-center gap-3 border-2 border-gray-700 bg-[rgb(10,14,27)] rounded-xl p-3 hover:border-blue-500/50 transition-all"
+                                                                            onMouseEnter={() => setShow(oIndex + 1)}
+                                                                            onMouseLeave={() => setShow(0)}
+                                                                        >
+                                                                            <input
+                                                                                type="checkbox"
+                                                                                className="w-5 h-5 accent-blue-500 cursor-pointer flex-shrink-0"
+                                                                                checked={question.answer.includes(oIndex)}
+                                                                                onChange={() => toggleAnswer(index, oIndex, setQuestions)}
+                                                                            />
+                                                                            <input
+                                                                                className="flex-1 bg-transparent text-white placeholder-gray-500 outline-none"
+                                                                                placeholder={`Option ${oIndex + 1}...`}
+                                                                                value={option}
+                                                                                onChange={(e) => updateVariant(index, oIndex, e.target.value, setQuestions)}
+                                                                            />
+                                                                            {question.variants.length > 2 && (
+                                                                                <button
+                                                                                    type="button"
+                                                                                    className={`opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-red-500/20 rounded-lg ${(show !== oIndex + 1) && "hidden"}`}
+                                                                                    onClick={() => deleteOption(index, oIndex, setQuestions)}
+                                                                                >
+                                                                                    <img src={trash_icon} alt="Delete" className="w-5 h-5" />
+                                                                                </button>
+                                                                            )}
+                                                                        </div>
+                                                                        {getError(`question_${index}_variant_${oIndex}`) && (
+                                                                            <p className="text-red-400 text-xs mt-1.5 ml-8 flex items-center gap-1">
+                                                                                <span>⚠</span> {getError(`question_${index}_variant_${oIndex}`)}
+                                                                            </p>
                                                                         )}
                                                                     </div>
-                                                                    {errors[`question_${index}_variant_${oIndex}`] && (
-                                                                        <p className="text-red-400 text-xs mt-1.5 ml-8 flex items-center gap-1">
-                                                                            <span>⚠</span> {errors[`question_${index}_variant_${oIndex}`]}
-                                                                        </p>
-                                                                    )}
-                                                                </div>
-                                                            )}
+                                                                )}
 
-                                                            {question.variants.length < 8 && (
-                                                                <button
-                                                                    type="button"
-                                                                    className="w-full py-2.5 px-4 border-2 border-dashed border-gray-600 hover:border-blue-500 text-gray-400 hover:text-blue-400 rounded-xl transition-all flex items-center justify-center gap-2 font-medium"
-                                                                    onClick={() => addOption({ qIndex: index, setQuestions })}
-                                                                >
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                                        <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-                                                                    </svg>
-                                                                    Add Option
-                                                                </button>
-                                                            )}
+                                                                {question.variants.length < 8 && (
+                                                                    <button
+                                                                        type="button"
+                                                                        className="w-full py-2.5 px-4 border-2 border-dashed border-gray-600 hover:border-blue-500 text-gray-400 hover:text-blue-400 rounded-xl transition-all flex items-center justify-center gap-2 font-medium"
+                                                                        onClick={() => addOption({ qIndex: index, setQuestions })}
+                                                                    >
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                                            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                                                                        </svg>
+                                                                        Add Option
+                                                                    </button>
+                                                                )}
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="flex justify-end pt-2">
+                                                            <button
+                                                                type="button"
+                                                                className="px-5 py-2.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 text-red-400 font-medium rounded-xl transition-all flex items-center gap-2"
+                                                                onClick={() => deleteQuestion({ qIndex: index, setQuestions: setQuestions })}
+                                                            >
+                                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                                                    <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                                </svg>
+                                                                Delete Question
+                                                            </button>
                                                         </div>
                                                     </div>
-
-                                                    <div className="flex justify-end pt-2">
-                                                        <button
-                                                            type="button"
-                                                            className="px-5 py-2.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 text-red-400 font-medium rounded-xl transition-all flex items-center gap-2"
-                                                            onClick={() => deleteQuestion({ qIndex: index, setQuestions: setQuestions })}
-                                                        >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                                                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                                                            </svg>
-                                                            Delete Question
-                                                        </button>
+                                                </QuestionAccordion>
+                                                {answerError && (
+                                                    <div className="mt-2 p-3 bg-red-500/10 border border-red-500/30 rounded-xl">
+                                                        <p className="text-red-400 text-sm flex items-center gap-2">
+                                                            <span>⚠</span> {answerError}
+                                                        </p>
                                                     </div>
-                                                </div>
-                                            </QuestionAccordion>
-                                            {errors[`question_${index}_answer`] && (
-                                                <div className="mt-2 p-3 bg-red-500/10 border border-red-500/30 rounded-xl">
-                                                    <p className="text-red-400 text-sm flex items-center gap-2">
-                                                        <span>⚠</span> {errors[`question_${index}_answer`]}
-                                                    </p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
+                                                )}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>
@@ -467,10 +479,9 @@ const AddQuizPage = () => {
                         <div className="flex justify-end p-6 bg-gradient-to-br from-[rgb(30,30,56)] to-[rgb(25,25,48)] rounded-2xl shadow-2xl mt-6">
                             <button
                                 className={`px-8 py-3.5 rounded-xl font-semibold text-white transition-all duration-200 flex items-center gap-2 ${isValid
-                                    ? "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg hover:shadow-xl transform hover:scale-105"
-                                    : "bg-gray-700 cursor-not-allowed opacity-50"
+                                        ? "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg hover:shadow-xl transform hover:scale-105"
+                                        : "bg-gray-700 hover:bg-gray-600 opacity-80"
                                     }`}
-                                disabled={!isValid}
                                 type="submit"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

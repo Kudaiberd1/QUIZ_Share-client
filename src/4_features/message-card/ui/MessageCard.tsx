@@ -2,6 +2,7 @@ import {useUserStore} from "../../auth/model/store.ts";
 import {useQuizStore} from "../../quiz/model/store.ts";
 import {FaStar} from "react-icons/fa";
 import FilterMessage from "../lib/filterMessage.ts";
+import api from "../../../6_shared/api/axiosInstance.ts";
 
 const MessageCard = () => {
 
@@ -13,10 +14,14 @@ const MessageCard = () => {
         return quizList?.find((q) => q.id === id);
     };
 
+    const markAsRead = (id: number) => {
+        api.post(`/user/inbox/${id}`);
+    }
+
     return (
         <>
             {feedbacks?.map((feedback) => (
-                <div className={"bg-gray-700/30 p-[22px] rounded-lg w-full"} key={feedback.id}>
+                <div className={"bg-gray-700/30 p-[22px] rounded-lg w-full hover:bg-gray-700/50"} key={feedback.id} onMouseEnter={() => markAsRead(feedback.id)}>
 
                     <div className={"flex justify-between mb-[13px]"}>
                         <div>

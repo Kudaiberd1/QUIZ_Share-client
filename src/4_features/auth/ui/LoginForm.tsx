@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import {loginSchema} from "../lib/Validators.ts";
 import {z} from "zod";
 import { toast } from 'react-toastify';
+import { FcGoogle } from "react-icons/fc";
 
 const LoginForm = () => {
     const [login, setLogin] = useState({email: "", password: "", rememberMe: false});
@@ -55,10 +56,10 @@ const LoginForm = () => {
     }
 
     return(
-        <div className={"rounded-xl md:bg-[rgb(21,22,40)] p-6"} onSubmit={handleSubmit}>
+        <div className={"rounded-xl md:bg-[rgb(21,22,40)] p-6 md:px-[64px]"} onSubmit={handleSubmit}>
             <h1 className={"px-10 text-center text-[30px]"}> Welcome Back </h1>
-            <p className={"px-[62px] text-center text-gray-300 text-[18px] mb-[48px]"}> Log in to continue your learning journey. </p>
-            <form className={"md:px-[64px]"}>
+            <p className={"text-center text-gray-300 text-[18px] mb-[48px]"}> Log in to continue your learning journey. </p>
+            <form className={""}>
                 <input onChange={(e) => setLogin({...login, email: e.target.value})} placeholder={"Email Address"} className={"border border-gray-500 rounded-lg mb-3 p-3 w-full"} />
                 {error.email && <p className="text-red-400 text-sm mt-0 mb-3">{error.email}</p>}
 
@@ -74,7 +75,20 @@ const LoginForm = () => {
                 </div>
                 <button type={"submit"} className={"w-full bg-[rgb(41,69,215)] py-2 rounded-lg mb-7"}> Log in </button>
             </form>
+            <div className="flex items-center w-full mt-3">
+                <div className="flex-grow h-px bg-gray-600"></div>
+                <span className="px-1 text-sm text-gray-300 tracking-wide">OR CONTINUE WITH</span>
+                <div className="flex-grow h-px bg-gray-600"></div>
+            </div>
+            <button
+                className="w-full my-[32px] flex items-center justify-center gap-3 py-3 rounded-xl border border-gray-600 bg-transparent text-gray-200 hover:bg-gray-800 transition"
+                onClick={() => window.location.href = "http://localhost:8080/oauth2/authorization/google"}
+            >
+                <FcGoogle className="text-xl" />
+                <span className="text-sm tracking-wide">Continue with Google</span>
+            </button>
             <p className={"text-center"}> Don't have an account? <span className={"text-blue-500 cursor-pointer"} onClick={() => navigate("/register")}> Register </span> </p>
+
         </div>
     )
 }
