@@ -21,9 +21,9 @@ const TakingQuizPage = () => {
     const { setSelected } = useSelectStore();
     const user = useUserStore(state => state.user);
 
-    const answeredCount = selected?.filter(arr => arr.length > 0).length;
+    const answeredCount = (selected?.filter(arr => arr.length > 0).length) ?? 0;
     const totalQuestions = quiz?.questions.length ?? 1;
-    const progress = (answeredCount / totalQuestions) * 100;
+    const progress = totalQuestions > 0 ? (answeredCount / totalQuestions) * 100 : 0;
 
 
     useEffect(() => {
@@ -37,7 +37,10 @@ const TakingQuizPage = () => {
     }, [])
 
     const handleSubmit = () => {
-        const result = CheckingTakenQuiz(quiz, selected);
+        if (!quiz) return console.warn("Attempted to submit without quiz data");
+        if (!user) return console.warn("No user available to submit result");
+
+        const result = CheckingTakenQuiz(quiz, selected ?? []);
         api.post("/quiz/result", {
             quiz: quiz.id,
             userAnswers: result.answers,
@@ -91,7 +94,7 @@ const TakingQuizPage = () => {
                                         </button>
                                         : <div></div>}
 
-                                    {pageIndex != (quiz?.questions.length) - 1 ?
+                                    {pageIndex !== ((quiz?.questions.length ?? 1) - 1) ?
                                         <button
                                             className="
                                                   px-[16px] py-[10px]

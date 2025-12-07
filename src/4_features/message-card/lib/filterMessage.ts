@@ -6,12 +6,12 @@ const FilterMessage = () => {
     const feedbacks = useMessagesStore((state) => state.feedbacks);
     const tab = useMessageTabsStore((state) => state.activeTab);
 
-    let filteredFeedbacks = feedbacks;
+    let filteredFeedbacks = feedbacks ?? [];
 
-    if(tab === "Read"){
-        filteredFeedbacks = feedbacks.filter(f => f.readed === true);
-    }else if(tab === "Unread"){
-        filteredFeedbacks = feedbacks.filter(f => f.readed === false);
+    if (tab === "Read") {
+        filteredFeedbacks = (feedbacks ?? []).filter(f => f.readed === true);
+    } else if (tab === "Unread") {
+        filteredFeedbacks = (feedbacks ?? []).filter(f => f.readed === false);
     }
 
     return filteredFeedbacks;

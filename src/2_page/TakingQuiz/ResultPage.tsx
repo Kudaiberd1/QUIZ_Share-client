@@ -19,7 +19,10 @@ const ResultPage = () => {
     const [authorId, setAuthorId] = useState<number>();
     const [quizId, setQuizId] = useState<number>();
 
-    const percentage = ((result?.correct) / (result?.correct + result?.wrong + result?.skipped)) * 100;
+    if (!result) return <div> Loading... </div>;
+
+    const percentage =
+        (result.correct / (result.correct + result.wrong + result.skipped)) * 100;
 
     const getFeedback = async (authorId: number, quizId: number) => {
         setAuthorId(authorId);
@@ -49,6 +52,7 @@ const ResultPage = () => {
             .catch((err) => console.log(err, "from feedback post"));
     }
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
         api.get(`/quiz/result/${id}`)
             .then((res) => {

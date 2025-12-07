@@ -2,10 +2,6 @@ import AnswerOption from "./AnswerOption.tsx";
 import {useState} from "react";
 import {useSelectStore} from "../../4_features/taking-quiz/model/store.ts";
 
-interface Prop{
-    question: number[]
-}
-
 interface Options{
     id: number;
     option: string;
@@ -24,7 +20,7 @@ const QuestionOptions = ({title, options, answers, questionIndex} : Props) => {
     const multipleChoice = answers.length>1;
     const { setSelected } = useSelectStore();
     const selected = useSelectStore(state => state.selected);
-    const [selecteds, setSelecteds] = useState<number[][]>(selected);
+    const [selecteds, setSelecteds] = useState<number[][]>(selected ?? []);
 
     const setSelect = (index: number) => {
         const updated = [...selecteds];

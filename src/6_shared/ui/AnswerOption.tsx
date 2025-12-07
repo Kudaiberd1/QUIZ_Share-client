@@ -4,7 +4,7 @@ interface Props {
     label: string;
     text: string;
     selected: boolean;
-    onClick: (event: MouseEvent<HTMLButtonElement>) => void;
+    onClick: (event: MouseEvent<HTMLDivElement>) => void;
 }
 
 const AnswerOption = ( {label, text, selected, onClick } : Props ) => {

@@ -9,7 +9,7 @@ interface QuizStore {
     updateQuizzes: (partial: Partial<QuizResponse[]>) => void;
 }
 
-export const useQuizStore = create<QuizStore>((set, get) => ({
+export const useQuizStore = create<QuizStore>((set) => ({
     quiz: null,
 
     setQuiz : (quiz) => {set({ quiz })},

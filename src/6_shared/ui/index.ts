@@ -1,5 +1,0 @@
-import home from "./icons/home.svg"
-import add from "./icons/add.svg"
-import grid from "./icons/grid.svg"
-import chat from "./icons/chat.svg"
-import user from "./icons/user.svg"

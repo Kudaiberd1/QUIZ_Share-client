@@ -29,7 +29,9 @@ export const RegisterForm  = () => {
         try{
             await registerSchema.parseAsync({email: register.email, password: register.password, confirmPassword: register.confirmPassword});
             const formData = new FormData();
-            formData.append("file", register.file);
+            if (register.file) {
+                formData.append("file", register.file);
+            }
             formData.append(
                 "data",
                 new Blob([JSON.stringify({
@@ -55,7 +57,7 @@ export const RegisterForm  = () => {
                     if (er[i].path[0] == "password" || er[i].path[0] == "confirmPassword") setError(prev => ({ ...prev, password: er[i].message }));
                 }
             }else{
-                const error_message = err.response.data.message;
+                const error_message = axios.isAxiosError(err) ? err.response?.data?.message : "Unknown error";
                 if(error_message.includes("unique")){
                     setError({email: "", password: ""});
                     toast.error("This email already exists", {
@@ -70,7 +72,7 @@ export const RegisterForm  = () => {
                     });
                 }else{
                     setError({email: "", password: ""});
-                    toast.error(err.response.data.message, {
+                    toast.error(axios.isAxiosError(err) ? err.response?.data?.message : "Unknown error", {
                         position: "top-right",
                         autoClose: 2000,
                         hideProgressBar: false,
@@ -106,7 +108,7 @@ export const RegisterForm  = () => {
                file:bg-[rgb(41,69,215)] file:text-white
                hover:file:bg-blue-700
                mb-3
-               cursor-pointer" onChange={(e) => setRegister({...register, file: e.target.files?.[0]}) } />
+               cursor-pointer" onChange={(e) => setRegister({...register, file: e.target.files?.[0] ?? null}) } />
 
                 <p className={"pb-2"}> I am a: </p>
                 <div className={"flex mb-6"}>
