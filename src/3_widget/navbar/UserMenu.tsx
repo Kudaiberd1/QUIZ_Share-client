@@ -19,12 +19,13 @@ const UserMenu = () => {
     return (
         <>
             <img
-                className={"rounded-full h-[36px] w-[36px]"}
+                className="rounded-full h-[36px] w-[36px]"
                 src={
-                    profile?.imageUrl instanceof File
-                        ? URL.createObjectURL(profile.imageUrl)
-                        : profile?.imageUrl ??
-                        `https://avatar.iran.liara.run/username?username=${profile?.firstName}+${profile?.lastName}`
+                    profile?.imageUrl
+                        ? typeof profile.imageUrl === "string"
+                            ? profile.imageUrl
+                            : URL.createObjectURL(profile.imageUrl)
+                        : `https://avatar.iran.liara.run/username?username=${profile?.firstName}+${profile?.lastName}`
                 }
             />
         </>

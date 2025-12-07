@@ -9,12 +9,12 @@ interface Props {
     isActive: boolean;
     onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
 }
-
 const SidebarItem = ({icon, label, to, isActive, onClick}: Props) => {
+
     return (
         <NavLink to={to} className={`flex items-center gap-3 px-4 py-3 rounded-xl transition text-lg 
         ${isActive ? "bg-[rgb(39,42,50)]" : "hover:bg-gray-700"}`} onClick={onClick}>
-            {icon}
+            {icon && <img src={icon as string} alt={label} className="w-6 h-6" />}
             {label}
         </NavLink>
     )
