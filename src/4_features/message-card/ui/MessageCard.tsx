@@ -1,7 +1,7 @@
 import {useUserStore} from "../../auth/model/store.ts";
 import {useQuizStore} from "../../quiz/model/store.ts";
 import {FaStar} from "react-icons/fa";
-import FilterMessage from "../lib/filterMessage.ts";
+import {FilterMessage} from "../lib/filterMessage.ts";
 import api from "../../../6_shared/api/axiosInstance.ts";
 
 const MessageCard = () => {
@@ -21,7 +21,7 @@ const MessageCard = () => {
     return (
         <>
             {feedbacks?.map((feedback) => (
-                <div className={"bg-gray-700/30 p-[22px] rounded-lg w-full hover:bg-gray-700/50"} key={feedback.id} onMouseEnter={() => markAsRead(feedback.id)}>
+                <div className={` p-[22px] rounded-lg w-full hover:bg-gray-700/50 ${!feedback.readed ? "bg-gray-700/90" : "bg-gray-700/30"}`} key={feedback.id} onMouseEnter={() => markAsRead(feedback.id)}>
 
                     <div className={"flex justify-between mb-[13px]"}>
                         <div>

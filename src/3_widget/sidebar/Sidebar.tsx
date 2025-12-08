@@ -10,7 +10,6 @@ import user from "../../6_shared/ui/icons/user.svg"
 import { Menu, X } from "lucide-react";
 import {useNavigate} from "react-router-dom";
 
-
 interface Prop{
     selected: number;
 }

@@ -113,7 +113,7 @@ const AddQuizPage = () => {
         const quizPayload = {
             ...quiz,
             authorId: user.id,
-            questions
+            question: questions
         };
 
         const formData = new FormData();

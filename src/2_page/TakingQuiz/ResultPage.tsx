@@ -18,11 +18,14 @@ const ResultPage = () => {
 
     const [authorId, setAuthorId] = useState<number>();
     const [quizId, setQuizId] = useState<number>();
+    const [percentage, setPercentage] = useState(0);
 
-    if (!result) return <div> Loading... </div>;
+    useEffect(() => {
+        if(result) {
+            setPercentage((result?.correct / (result?.correct + result?.wrong + result?.skipped)) * 100);
+        }
+    },[])
 
-    const percentage =
-        (result.correct / (result.correct + result.wrong + result.skipped)) * 100;
 
     const getFeedback = async (authorId: number, quizId: number) => {
         setAuthorId(authorId);
@@ -52,7 +55,6 @@ const ResultPage = () => {
             .catch((err) => console.log(err, "from feedback post"));
     }
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
         api.get(`/quiz/result/${id}`)
             .then((res) => {
@@ -62,9 +64,10 @@ const ResultPage = () => {
             .catch((err) => console.log(err, "from Result page!"));
     }, [id]);
 
+
     return (
         <>
-            {result ?
+            {result !== undefined ?
                 <div className={`flex min-h-screen`}>
                     <Sidebar selected={0} />
                     <div className={"flex-1 flex flex-col md:ms-[304px]"}>
@@ -79,7 +82,7 @@ const ResultPage = () => {
                                         <p className={"pt-[5px] font-bold"}><span
                                             className={"text-[60px] text-blue-700"}> {percentage}% </span> score </p>
                                         <p className={"text-[18px] text-neutral-400 pt-[12px]"}> You
-                                            answered {result.correct} out
+                                            answered {result?.correct} out
                                             of {result.correct + result.wrong + result.skipped} questions correctly. </p>
                                         <div className="w-full h-3 bg-blue-200 rounded-xl overflow-hidden mt-[14px]">
                                             <div

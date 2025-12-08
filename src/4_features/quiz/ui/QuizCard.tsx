@@ -79,7 +79,7 @@ const QuizCard = ({ quiz }: { quiz: QuizResponse }) => {
 
                         <div className="flex items-center space-x-1 text-yellow-400">
                             <Star className="w-5 h-5 fill-yellow-400 stroke-yellow-400" />
-                            <span className="font-semibold text-lg">{avgRate}</span>
+                            <span className="font-semibold text-lg">{avgRate.toFixed(1)}</span>
                         </div>
                     </div>
 

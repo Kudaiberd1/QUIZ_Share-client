@@ -10,7 +10,7 @@ const RatingStats = ({averageRating, ratings, totalRatings} : RatingStatsProps) 
     return (
         <div className="bg-[#0f1236] text-white w-full max-w-xl p-8 rounded-xl">
             <div className="text-center mb-4">
-                <h1 className="text-6xl font-bold">{averageRating}</h1>
+                <h1 className="text-6xl font-bold">{averageRating.toFixed(1)}</h1>
                 <p className="text-xl font-medium mt-1">
                     {averageRating >= 4.5 ? "Excellent" : "Good"}
                 </p>
