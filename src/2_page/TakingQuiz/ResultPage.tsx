@@ -167,6 +167,7 @@ const ResultPage = () => {
                                                     className={`w-[45px] h-[45px] text-[14px] flex items-center justify-center rounded-full transition-all duration-200 cursor-pointer hover:scale-110 hover:shadow-lg text-black 
                                               ${item === "WRONG" ? "bg-red-500" : item === "CORRECT" ? "bg-green-500" : "bg-yellow-500"}
                                             `}
+                                                        onClick={() => navigate(`/quiz/result/${id}/questions`)}
                                                 >
                                                     {index + 1}
                                                 </div>

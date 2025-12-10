@@ -2,14 +2,10 @@ import AnswerOption from "./AnswerOption.tsx";
 import {useState} from "react";
 import {useSelectStore} from "../../4_features/taking-quiz/model/store.ts";
 
-interface Options{
-    id: number;
-    option: string;
-}
 
 interface Props {
     title: string;
-    options: Options[];
+    options: string[];
     answers: number[];
     questionIndex: number;
 }
@@ -41,7 +37,7 @@ const QuestionOptions = ({title, options, answers, questionIndex} : Props) => {
             {multipleChoice && <p className={"text-neutral-400 my-3 text-sm"}> Multiple choice </p>}
             <div className={"space-y-[16px] mb-[41px]"}>
                 {options.map((option, index) =>
-                    <AnswerOption label={alphabet[index]} text={option.option} selected={selecteds[questionIndex].includes(index)} onClick={() => {setSelect(index);}} key={index} />
+                    <AnswerOption label={alphabet[index]} text={option} selected={selecteds[questionIndex].includes(index)} onClick={() => {setSelect(index);}} key={index} />
                 )}
             </div>
         </>

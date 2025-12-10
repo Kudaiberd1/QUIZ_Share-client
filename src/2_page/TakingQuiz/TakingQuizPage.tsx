@@ -2,12 +2,16 @@ import Navbar from "../../3_widget/navbar/Navbar.tsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../6_shared/api/axiosInstance.ts";
-import type { QuizResponse } from "../../5_entity/model/quiz/type.ts";
+import type {QuizResponse, Variant} from "../../5_entity/model/quiz/type.ts";
 import QuestionOptions from "../../6_shared/ui/QuestionOptions.tsx";
 import { useSelectStore } from "../../4_features/taking-quiz/model/store.ts";
 import Timer from "../../4_features/timer/Timer.tsx";
 import CheckingTakenQuiz from "../../4_features/taking-quiz/lib/CheckingTakenQuiz.ts";
 import { useUserStore } from "../../4_features/auth/model/store.ts";
+
+function getVariantOptions(question: Variant[]): string[] {
+    return question.map(v => v.option);
+}
 
 const TakingQuizPage = () => {
 
@@ -71,7 +75,7 @@ const TakingQuizPage = () => {
                         </div>
                         <div className={"mt-[41px]"}>
                             {quiz?.questions.map((question, index) =>
-                                pageIndex == index && <QuestionOptions title={question.question} options={question.variants} answers={question.answer} questionIndex={index} key={index} />
+                                pageIndex == index && <QuestionOptions title={question.question} options={getVariantOptions(question?.variants)} answers={question.answer} questionIndex={index} key={index} />
                             )}
 
 

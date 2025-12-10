@@ -12,6 +12,7 @@ import ResultPage from "../../2_page/TakingQuiz/ResultPage.tsx";
 import DashboardPage from "../../2_page/Dashboard/DashboardPage.tsx";
 import InboxPage from "../../2_page/InboxPage/InboxPage.tsx";
 import LoginCallBack from "../../2_page/Authorization/LoginCallBack.tsx";
+import WorkWithMistakes from "../../2_page/TakingQuiz/WorkWithMistakes.tsx";
 
 const AppRoute = () => {
     return(
@@ -23,9 +24,10 @@ const AppRoute = () => {
                     <Route path={"/add"} element={<AddQuizPage />}/>
                     <Route path={"/quiz/:id"} element={<QuizPage />} />
                     <Route path={"/quiz/:id/taking"} element={<TakingQuizPage />} />
-                    <Route path={"quiz/result/:id"} element={<ResultPage />} />
+                    <Route path={"/quiz/result/:id"} element={<ResultPage />} />
                     <Route path={"/dashboard"} element={<DashboardPage />} />
                     <Route path={"/messages"} element={<InboxPage />} />
+                    <Route path={"/quiz/result/:id/questions"} element={<WorkWithMistakes />} />
                 </Route>
                 <Route path={"/register"} element={<Register />} />
                 <Route path={"/login"} element={<Login />} />

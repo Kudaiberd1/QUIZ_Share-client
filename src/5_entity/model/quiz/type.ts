@@ -14,14 +14,14 @@ export interface QuizResponse {
     takeTimeLimit: number;
 }
 
-interface Question {
+export interface Question {
     id: number;
     question: string;
     variants: Variant[];
     answer: number[];
 }
 
-interface Variant {
+export interface Variant {
     id: number;
     option: string;
 }
@@ -51,7 +51,7 @@ export interface AnswerProp {
 
 export interface Result {
     id: number;
-    quiz: QuizProp;
+    quiz: QuizResponse;
     userAnswers: AnswerProp[];
     statuses: string[];
     correct: number;
