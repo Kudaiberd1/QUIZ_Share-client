@@ -51,6 +51,18 @@ export interface AnswerProp {
 
 export interface Result {
     id: number;
+    quiz: QuizProp;
+    userAnswers: AnswerProp[];
+    statuses: string[];
+    correct: number;
+    wrong: number;
+    skipped: number;
+    rating: number;
+    authorId: number;
+}
+
+export interface ResultPageProp {
+    id: number;
     quiz: QuizResponse;
     userAnswers: AnswerProp[];
     statuses: string[];

@@ -2,13 +2,13 @@ import {useNavigate, useParams} from "react-router-dom";
 import Navbar from "../../3_widget/navbar/Navbar.tsx";
 import api from "../../6_shared/api/axiosInstance.ts";
 import {useEffect, useState} from "react";
-import type {Result} from "../../5_entity/model/quiz/type.ts";
 import TakenQuestionOption from "../../6_shared/ui/TakenQuestionOption.tsx";
+import type {ResultPageProp} from "../../5_entity/model/quiz/type.ts";
 
 const WorkWithMistakes = () => {
 
     const { id } = useParams<{ id: string }>();
-    const [result, setResult] = useState<Result>();
+    const [result, setResult] = useState<ResultPageProp>();
 
     const navigate = useNavigate();
 
